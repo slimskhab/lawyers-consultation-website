@@ -1,0 +1,26 @@
+ul{
+    list-style: none;
+    color: white;
+    display: flex;
+    
+}
+ul li:not(:last-child) {
+    margin-right: 67px;
+  }
+
+.nav-text-style{
+    color: #FFF;
+text-align: center;
+font-family: "Montserrat",;
+font-size: 20px;
+font-style: normal;
+font-weight: 600;
+line-height: 54px; /* 270% */
+}
+
+.navbar-style{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
