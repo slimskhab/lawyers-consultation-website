@@ -4,7 +4,7 @@ import "./NavigationBar.css"
 function NavigationBar(props) {
     return (
         <nav className='navbar-style'>
-<img src="https://picsum.photos/200" style={{height:83,width:83}}></img>
+<img src="/logo.png" style={{height:83,width:83}}></img>
 
 <div className='d-flex text-white'>
     <ul>

@@ -1,0 +1,143 @@
+
+:root{
+
+}
+.title{
+    color: #001F3F;
+text-align: center;
+font-family: "Montserrat",;
+font-size: 3vw;
+font-style: normal;
+font-weight: 700;
+line-height: 54px; /* 120% */
+}
+
+.mostdonated-container{
+    padding-top: 115px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.text-style{
+    width: calc(var(--device-width, 100%)*0.4);
+    color: #333;
+text-align: center;
+font-family: "Lato",;
+font-size: 1.5vw;
+
+font-style: normal;
+font-weight: 500;
+line-height: 32px; /* 160% */
+padding-bottom: 50px;
+
+}
+
+@media screen and (max-width: 1440px) {
+    .text-style {
+        font-size: 20px; /* Set your desired minimum font size here */
+    }
+    .title{
+        font-size: 45px;
+    }
+}
+
+.username-text{
+    width: 115px;
+    color: #001F3F;
+font-family: "Montserrat",;
+font-size: 2vw;
+font-style: normal;
+text-align: center;
+width: 100%;
+font-weight: 700;
+line-height: 3vw; /* 133.333% */
+}
+
+.donation-text{
+    color: #333;
+font-family: "Montserrat",;
+font-size: 1vw;
+width: 100%;
+
+font-style: normal;
+font-weight: 300;
+}
+
+.instagram-text{
+    color: #333;
+font-family: "Montserrat",;
+font-size: 1vw;
+width: 100%;
+
+font-style: normal;
+font-weight: 500;
+
+}
+
+.custom-button{
+    width: 178px;
+height: 43px;
+flex-shrink: 0;
+border-radius: 79px;
+background: #E53935;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+position: absolute;
+top: calc(var(--device-width, 100%) * 0.075 );
+
+}
+
+
+
+.button-text-profile{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: #FFF;
+font-family: "Montserrat",;
+font-size: 1vw;
+font-style: normal;
+font-weight: 600;
+line-height: 32px;
+}
+
+.users-container{
+display: flex;
+justify-content: space-between;
+width: 100%;
+}
+
+
+.user-card{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.user-card img{
+    border-radius: 8px;
+width: 70%;
+}
+
+.info-card {
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+width: 55%;
+height: calc(var(--device-width, 100%) * 0.075 + 20px);
+
+border-radius: 12px;
+    color: white;
+    text-align: center;
+    background-color: white;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+    transform: translate(0, -40%);
+}
