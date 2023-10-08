@@ -7,11 +7,11 @@ const searchSlice=createSlice({
         data:[],
     },
     reducers:{
-        filterList:(state,action)=>{
-            state.data=userData.filter((e,index)=>{
-                return e.name.toLowerCase().includes(action.payload)
-            })
-        },
+        filterList: (state, action) => {
+            state.data = userData.filter((e, index) => {
+              return e.name.toLowerCase().includes(action.payload);
+            }); 
+          },
         clearList:(state,action)=>{
             state.data=[];
         }

@@ -1,12 +1,10 @@
-ul{
+.header-bar{
     list-style: none;
     color: white;
     display: flex;
     
 }
-ul li:not(:last-child) {
-    margin-right: 67px;
-  }
+
 
 .nav-text-style{
     color: #FFF;

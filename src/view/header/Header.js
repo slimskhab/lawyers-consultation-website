@@ -1,8 +1,6 @@
 import React from 'react';
 import "./Header.css"
 import NavigationBar from './navigation/NavigationBar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 import SearchBar from './searchBar/SearchBar';
 
 function Header(props) {
@@ -12,7 +10,7 @@ function Header(props) {
         <div className='header-container'>
 
             <NavigationBar />
-            <h1 className='title'>
+            <h1 className='website-title'>
                 Natty Scan
             </h1>
             <p className="description-text">
