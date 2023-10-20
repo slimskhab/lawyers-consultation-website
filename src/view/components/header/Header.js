@@ -2,7 +2,6 @@ import React from 'react';
 import "./Header.css"
 import NavigationBar from './navigation/NavigationBar';
 import SearchBar from './searchBar/SearchBar';
-
 function Header(props) {
 
 

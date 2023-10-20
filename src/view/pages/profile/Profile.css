@@ -1,0 +1,114 @@
+.main-profile-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding-top: 100px;
+}
+
+.profile-images-container {
+    width: 40%;
+    display: flex;
+    justify-content: end;
+    flex-direction: row;
+
+}
+
+.profile-info-container {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+
+}
+
+.profile-main-image-container img {
+    border-radius: 20px;
+    width: 424px;
+    height: 409px;
+    flex-shrink: 0;
+}
+
+.profile-main-image-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+}
+
+.profile-secondary-images img {
+    height: 120px;
+    width: 120px;
+    border-radius: 17px;
+    margin-top: 34px;
+}
+
+.profile-secondary-images {
+    display: flex;
+    justify-content: space-between;
+}
+
+.profile-images-container svg {
+    cursor: pointer;
+    width: 50px;
+    margin-top: 200px;
+}
+
+.profile-title {
+    color: #001F3F;
+    text-align: center;
+    font-family: "Montserrat", sans-serif;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 54px;
+    /* 135% */
+}
+
+.sup-text {
+    transform: translate(0%, 30%);
+    color: #66BB6A;
+    font-family: "Lato", sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.claim-profile-button {
+    width: 263px;
+    height: 49px;
+    flex-shrink: 0;
+    border-radius: 30px 0px;
+    background: var(--main-color);
+
+    color: #FFF;
+    text-align: center;
+    font-family: "Montserrat", sans-serif;
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 54px;
+    cursor: pointer;
+    /* 257.143% */
+
+}
+
+.social-media-block {
+    display: flex;
+}
+
+
+
+.icon-block {
+    width: 26.911px;
+    height: 26.911px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    background: #000;
+    display: flex;
+    margin-right: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}

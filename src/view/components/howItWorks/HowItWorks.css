@@ -16,7 +16,7 @@
 
 
 .step-title{
-    color: #001F3F;
+    color: var(--main-color);
 text-align: center;
 font-family: "Montserrat",sans-serif;
 font-size: 2vw;

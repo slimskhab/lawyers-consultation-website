@@ -1,15 +1,16 @@
 
-:root{
-
-}
 .title{
-    color: #001F3F;
+    color: var(--main-color);
 text-align: center;
     font-family: "Montserrat", sans-serif;
 font-size: 3vw;
 font-style: normal;
 font-weight: 700;
 line-height: 54px; /* 120% */
+}
+
+img{
+    cursor: pointer;
 }
 
 .mostdonated-container{
@@ -45,7 +46,7 @@ padding-bottom: 50px;
 
 .username-text{
     width: 115px;
-    color: #001F3F;
+    color: var(--main-color);
 font-family: "Montserrat",;
 font-size: 2vw;
 font-style: normal;

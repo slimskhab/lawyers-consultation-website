@@ -2,7 +2,7 @@
 height: 532px;
 flex-shrink: 0;
 width: 100%;
-background: #001F3F;
+background: var(--main-color);
 margin-top: 150px;
 width: 100%;
 display: flex;

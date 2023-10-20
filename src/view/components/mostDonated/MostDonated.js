@@ -28,7 +28,7 @@ function MostDonated(props) {
 
             <div className='users-container'>
                 <div className="user-card">
-                    <img src="/user.png" alt="name"></img>
+                    <img src="/user.png" alt="name" ></img>
                     <div className='info-card'>
                         <h2 className='username-text'> Username</h2>
                         <span className='donation-text'> $152.259 Donations</span>

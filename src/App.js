@@ -1,18 +1,14 @@
 import './App.css';
-import Header from './view/header/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MostDonated from './view/mostDonated/MostDonated';
-import HowItWorks from './view/howItWorks/HowItWorks';
-import HomepageFooter from './view/homepageFooter/HomepageFooter';
-import Footer from './view/footer/Footer';
+
+import HomePage from './view/pages/HomePage';
+import Profile from './view/pages/profile/Profile';
 function App() {
   return (
     <div className="App" style={{fontFamily:"'Montserrat', sans-serif;",color:"black"}}>
-      <Header/>
-      <MostDonated/>
-      <HowItWorks/>
-      <HomepageFooter/>
-    
+   {/*<HomePage/> */} 
+
+    <Profile/>
     </div>
   );
 }

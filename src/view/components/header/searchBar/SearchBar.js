@@ -1,16 +1,12 @@
-
-
-import React from 'react';
-import { Scrollbars } from 'react-custom-scrollbars';
-
-import { filterList, clearList } from '../../../features/Search';
+import React, { useState, } from 'react';
+import { filterList, clearList } from '../../../../features/Search';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
 import "./SearchBar.css"
 function SearchBar(props) {
     const searchResult = useSelector((state) => state.searchStore.data);
     const dispatch = useDispatch();
     const [searchText, setSearchText] = useState("");
+
     return (
         <div>
             <div className={searchResult.length === 0 ? 'search-bar-closed' : 'search-bar-opened'}>
@@ -47,17 +43,17 @@ function SearchBar(props) {
 
             {
                 searchResult.length !== 0 && (
-                
-<div className='data-result-container'>
-                <div className='data-result'>
-      
-                    {
-                        searchResult.map((e, index) => {
-                            return (<a className='data-item'><p>{e.name}</p></a>)
-                        })
-                    }
 
-                </div></div>)
+                    <div className='data-result-container'>
+                        <div className='data-result'>
+
+                            {
+                                searchResult.map((e, index) => {
+                                    return (<a className='data-item'><p>{e.name}</p></a>)
+                                })
+                            }
+
+                        </div></div>)
             }
         </div>
     );

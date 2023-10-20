@@ -65,13 +65,11 @@
   }
 
   .data-result {
-    top: 590px;
     width: 800px;
     background-color: white;
     display: flex;
     flex-direction: column;
     border-bottom-left-radius: 39px;
-    border-bottom-right-radius: 39px;
     z-index: 9999;
     overflow-y: scroll;
 
@@ -84,7 +82,7 @@
  
 .data-result-container{
     position: absolute;
-    top: 590px;
+    top: 580px;
     width: 830px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -113,10 +111,7 @@ background: #F0F2F3;
   }
   
   .data-result::-webkit-scrollbar-thumb {
-background: #001F3F;
+background: var(--main-color);
     border-radius: 100vw;
   }
   
-  .data-result::-webkit-scrollbar-thumb:hover {
-    background: hsl(120 100% 10% / 1);
-  }

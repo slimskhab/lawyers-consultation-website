@@ -9,8 +9,8 @@
 .nav-text-style{
     color: #FFF;
 text-align: center;
-font-family: "Montserrat",;
-font-size: 20px;
+font-family: "Montserrat",sans-serif;
+font-size: 1.25vw;
 font-style: normal;
 font-weight: 600;
 line-height: 54px; /* 270% */
@@ -21,4 +21,10 @@ line-height: 54px; /* 270% */
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+}
+
+@media screen and (max-width: 1440px) {
+    .nav-text-style {
+        font-size: 20px; /* Set your desired minimum font size here */
+    }
 }
