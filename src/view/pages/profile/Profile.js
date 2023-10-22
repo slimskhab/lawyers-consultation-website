@@ -2,7 +2,18 @@ import React from 'react';
 import Footer from "../../components/footer/Footer"
 import SmallNavBar from '../../components/smallnavigationbar/SmallNavBar';
 import "./Profile.css"
+import Milestone from '../../components/milestone/Milestone';
 function Profile(props) {
+    var donation = "50";
+    var firstMilestoneIsActive=false;
+    var secondMilestoneIsActive=false;
+    var thirdMilestoneIsActive=false;
+    var forthMilestoneIsActive=false;
+
+function changeMilestone(){
+firstMilestoneIsActive=true;
+}
+changeMilestone();
     return (
         <div>
 
@@ -37,7 +48,7 @@ function Profile(props) {
                 </div>
 
                 <div className='profile-info-container'>
-                    <div style={{ width: "95%" }} className='d-flex justify-content-between'>
+                    <div style={{ width: "100%" }} className='d-flex justify-content-between'>
 
                         <div style={{ display: "flex" }}><h1 className='profile-title'>Slim Skhab</h1><sup className='sup-text'>trusted</sup>
                         </div>
@@ -105,6 +116,34 @@ function Profile(props) {
                         </div>
                     </div>
 
+
+                    <div className="progress-bar-container">
+
+                        <div className="progress-box">
+                            <span className="mini-title">Donation Progress:</span>
+                            <div className="skill-bar">
+                                <span className="progress-per" style={{ width: `${donation}%` }}>
+                                    <span className="tooltips">$95</span>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                        <div className='milestones-container'>
+                        <span className="mini-title">Milestones:</span>
+
+<Milestone milestoneName="First Milestone" milestoneNumber="1" milestoneRange="500$ to 1000$" milestoneColor="#26ADEB" milestoneActiveColor="rgba(38, 173, 235, 0.14)" isActive={firstMilestoneIsActive} />
+<br></br>
+<Milestone milestoneName="Second Milestone" milestoneNumber="2" milestoneRange="1000$ to 2000$" milestoneColor="#FA7193" milestoneActiveColor="rgba(250, 113, 147, 0.14)" isActive={secondMilestoneIsActive} />
+<br></br>
+<Milestone milestoneName="Third Milestone" milestoneNumber="3" milestoneRange="2000$ to 3000$" milestoneColor="#8183FE" milestoneActiveColor="rgba(129, 131, 254, 0.14)" isActive={thirdMilestoneIsActive}/>
+<br></br>
+<Milestone milestoneName="Forth Milestone" milestoneNumber="4" milestoneRange="3000$+" milestoneColor="#46DDB9" milestoneActiveColor="rgba(70, 221, 185, 0.14)" isActive={forthMilestoneIsActive}/>
+                        
+                        </div>
+                        
+
+                    
 
                 </div>
             </div>

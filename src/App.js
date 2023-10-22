@@ -6,9 +6,11 @@ import Profile from './view/pages/profile/Profile';
 function App() {
   return (
     <div className="App" style={{fontFamily:"'Montserrat', sans-serif;",color:"black"}}>
-   {/*<HomePage/> */} 
+   
 
-    <Profile/>
+   {/* <HomePage/>*/}
+<Profile/>
+    
     </div>
   );
 }
