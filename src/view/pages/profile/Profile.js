@@ -5,24 +5,27 @@ import "./Profile.css"
 import Milestone from '../../components/milestone/Milestone';
 function Profile(props) {
     var donation = "50";
-    var firstMilestoneIsActive=false;
-    var secondMilestoneIsActive=false;
-    var thirdMilestoneIsActive=false;
-    var forthMilestoneIsActive=false;
+    var firstMilestoneIsActive = false;
+    var secondMilestoneIsActive = false;
+    var thirdMilestoneIsActive = false;
+    var forthMilestoneIsActive = false;
 
-function changeMilestone(){
-firstMilestoneIsActive=true;
-}
-changeMilestone();
+    function changeMilestone() {
+        firstMilestoneIsActive = true;
+    }
+    changeMilestone();
     return (
         <div>
 
             <SmallNavBar />
             <div className='main-profile-container'>
                 <div className='profile-images-container'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                        <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
+
+                    <div style={{ width: 48 }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
                     <div>
 
                         <div className='profile-main-image-container'>
@@ -40,10 +43,12 @@ changeMilestone();
 
                         </div>
                     </div>
+                    <div style={{ width: 48 }}>
 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                        <path d="M18 12L30 24L18 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <path d="M18 12L30 24L18 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
 
                 </div>
 
@@ -129,23 +134,44 @@ changeMilestone();
                         </div>
 
                     </div>
-                        <div className='milestones-container'>
+                    <div className='milestones-container'>
                         <span className="mini-title">Milestones:</span>
 
-<Milestone milestoneName="First Milestone" milestoneNumber="1" milestoneRange="500$ to 1000$" milestoneColor="#26ADEB" milestoneActiveColor="rgba(38, 173, 235, 0.14)" isActive={firstMilestoneIsActive} />
-<br></br>
-<Milestone milestoneName="Second Milestone" milestoneNumber="2" milestoneRange="1000$ to 2000$" milestoneColor="#FA7193" milestoneActiveColor="rgba(250, 113, 147, 0.14)" isActive={secondMilestoneIsActive} />
-<br></br>
-<Milestone milestoneName="Third Milestone" milestoneNumber="3" milestoneRange="2000$ to 3000$" milestoneColor="#8183FE" milestoneActiveColor="rgba(129, 131, 254, 0.14)" isActive={thirdMilestoneIsActive}/>
-<br></br>
-<Milestone milestoneName="Forth Milestone" milestoneNumber="4" milestoneRange="3000$+" milestoneColor="#46DDB9" milestoneActiveColor="rgba(70, 221, 185, 0.14)" isActive={forthMilestoneIsActive}/>
-                        
-                        </div>
-                        
+                        <Milestone milestoneName="First Milestone" milestoneNumber="1" milestoneRange="500$ to 1000$" milestoneColor="#26ADEB" milestoneActiveColor="rgba(38, 173, 235, 0.14)" isActive={firstMilestoneIsActive} />
+                        <br></br>
+                        <Milestone milestoneName="Second Milestone" milestoneNumber="2" milestoneRange="1000$ to 2000$" milestoneColor="#FA7193" milestoneActiveColor="rgba(250, 113, 147, 0.14)" isActive={secondMilestoneIsActive} />
+                        <br></br>
+                        <Milestone milestoneName="Third Milestone" milestoneNumber="3" milestoneRange="2000$ to 3000$" milestoneColor="#8183FE" milestoneActiveColor="rgba(129, 131, 254, 0.14)" isActive={thirdMilestoneIsActive} />
+                        <br></br>
+                        <Milestone milestoneName="Forth Milestone" milestoneNumber="4" milestoneRange="3000$+" milestoneColor="#46DDB9" milestoneActiveColor="rgba(70, 221, 185, 0.14)" isActive={forthMilestoneIsActive} />
 
-                    
-
+                    </div>
                 </div>
+            </div>
+            <div className='button-container'>
+                <div className='vote-bottons'>
+                    <div className='vote-bottons-compact'>
+                        <div style={{ width: 48, opacity: 0 }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div className='vote-button natty'>
+                            <span className='vote-button-text'>Natty</span>
+                            <span className='vote-button-number'>200 Votes</span>
+                        </div>
+                        <div className='vote-button enhanced'>
+                            <span className='vote-button-text'>Enhanced</span>
+                            <span className='vote-button-number'>200 Votes</span>
+                        </div>
+                        <div style={{ width: 48, opacity: 0 }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div className='donate-button'>Donate</div>
             </div>
             <Footer />
         </div>

@@ -206,6 +206,76 @@
     width: 100%;
 }
 
+.button-container{
+    width: 100%;
+    display: flex;
+}
+
+.vote-bottons{
+    width: 40%;
+    display: flex;
+    justify-content: end;
+}
+
+.donate-button{
+    width: 58%;
+    border-radius: 30px 0px;
+background: #E53935;
+height: 49px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+color: #FFF;
+text-align: center;
+font-family: "Montserrat",sans-serif;
+font-size: 22px;
+font-style: normal;
+font-weight: 600;
+cursor: pointer;
+}
+
+.vote-button{
+    width: 100%;
+height: 48px;
+border-radius: 45px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+cursor: pointer;
+
+}
+
+.natty{
+    background-color:#66BB6A;
+margin-right: 22px;
+}
+
+.enhanced{
+background-color: #E24C4B;
+}
+
+.vote-bottons-compact{
+    display: flex;
+
+    width: 520px;
+}
+
+.vote-button-text{
+    color: #FFF;
+text-align: center;
+font-family: "Montserrat",sans-serif;
+font-size: 15px;
+font-style: normal;
+font-weight: 600;
+}
+
+.vote-button-number{
+    color: #FFF;
+font-family: "Lato",sans-serif;
+font-size: 10px;
+font-style: normal;
+font-weight: 500;
+}
 @media screen and (max-width: 1440px) {
     .tooltips {
         font-size: 15px !important; 
@@ -215,8 +285,9 @@
     }
     .skill-box .title{
         font-size: 24px !important; 
-
     }
 
-
 }
+
+
+
