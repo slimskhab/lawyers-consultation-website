@@ -211,11 +211,12 @@
     display: flex;
 }
 
-.vote-bottons{
+.vote-buttons{
     width: 40%;
     display: flex;
     justify-content: end;
 }
+
 
 .donate-button{
     width: 58%;
@@ -254,9 +255,8 @@ margin-right: 22px;
 background-color: #E24C4B;
 }
 
-.vote-bottons-compact{
+.vote-buttons-compact{
     display: flex;
-
     width: 520px;
 }
 
@@ -276,6 +276,12 @@ font-size: 10px;
 font-style: normal;
 font-weight: 500;
 }
+
+.additional-infos-container{
+    width: 100%;
+    padding: 0 calc(40% - 472px);
+}
+
 @media screen and (max-width: 1440px) {
     .tooltips {
         font-size: 15px !important; 

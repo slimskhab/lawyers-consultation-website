@@ -3,17 +3,38 @@ import Footer from "../../components/footer/Footer"
 import SmallNavBar from '../../components/smallnavigationbar/SmallNavBar';
 import "./Profile.css"
 import Milestone from '../../components/milestone/Milestone';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectImage, setImages, swapImageLeft, swapImageRight } from '../../../features/ImageSwapper';
+import { useEffect } from 'react';
+
 function Profile(props) {
     var donation = "50";
     var firstMilestoneIsActive = false;
     var secondMilestoneIsActive = false;
     var thirdMilestoneIsActive = false;
     var forthMilestoneIsActive = false;
+    const dispatch = useDispatch();
 
     function changeMilestone() {
         firstMilestoneIsActive = true;
     }
     changeMilestone();
+    var firstImageLink = "https://images.unsplash.com/photo-1481349518771-20055b2a7b24?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fHww"
+    var secondImageLink = "https://repository-images.githubusercontent.com/260096455/47f1b200-8b2e-11ea-8fa1-ab106189aeb0"
+    var thirdImageLink = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3m18L2DEROZg6VhtnYKc05oTvqkQXR3qclDy6Z1L9PQ&s"
+    var forthImageLink = "https://thumbs.dreamstime.com/z/random-click-squirrel-wire-random-picture-cute-squirrel-219506797.jpg"
+    var fifthImageLink = "https://hatrabbits.com/wp-content/uploads/2017/01/random-word-1.jpg"
+
+
+    const images = useSelector((state) => state.imageSwapperStore.data);
+
+    var additionalInfos = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
+    useEffect(() => {
+        dispatch(setImages([firstImageLink, secondImageLink, thirdImageLink, forthImageLink, fifthImageLink]));
+    }, [])
+
+
     return (
         <div>
 
@@ -22,7 +43,9 @@ function Profile(props) {
                 <div className='profile-images-container'>
 
                     <div style={{ width: 48 }}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" onClick={() => {
+                            dispatch(swapImageLeft());
+                        }}>
                             <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </div>
@@ -30,22 +53,30 @@ function Profile(props) {
 
                         <div className='profile-main-image-container'>
 
-                            <img src="https://picsum.photos/200" alt="name" ></img>
+                            <img src={images[0]} alt="name" ></img>
 
                         </div>
                         <div >
 
                             <div className='profile-secondary-images'>
-                                <img src="https://picsum.photos/200" alt="name" ></img>
-                                <img src="https://picsum.photos/200" alt="name" ></img>
-                                <img src="https://picsum.photos/200" alt="name" ></img>
+                                <img src={images[1]} alt="name" onClick={() => {
+                                    dispatch(selectImage(1));
+                                }}></img>
+                                <img src={images[2]} alt="name" onClick={() => {
+                                    dispatch(selectImage(2));
+                                }}></img>
+                                <img src={images[3]} alt="name" onClick={() => {
+                                    dispatch(selectImage(3));
+                                }}></img>
                             </div>
 
                         </div>
                     </div>
                     <div style={{ width: 48 }}>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" onClick={() => {
+                            dispatch(swapImageRight())
+                        }}>
                             <path d="M18 12L30 24L18 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </div>
@@ -148,9 +179,10 @@ function Profile(props) {
                     </div>
                 </div>
             </div>
+            <br></br>
             <div className='button-container'>
-                <div className='vote-bottons'>
-                    <div className='vote-bottons-compact'>
+                <div className='vote-buttons'>
+                    <div className='vote-buttons-compact'>
                         <div style={{ width: 48, opacity: 0 }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
                                 <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
@@ -170,9 +202,25 @@ function Profile(props) {
                             </svg>
                         </div>
                     </div>
+
+
                 </div>
+
                 <div className='donate-button'>Donate</div>
+
             </div>
+
+            <br></br>
+
+            {additionalInfos.length !== 0 && (
+                <div className='additional-infos-container'>
+                    <h1 className='profile-title' style={{ textAlign: "start" }}>Additional Information</h1>
+                    <br></br>
+                    <p style={{ textAlign: "start" }}>
+                        {additionalInfos}
+                    </p>
+                </div>
+            )}
             <Footer />
         </div>
     );

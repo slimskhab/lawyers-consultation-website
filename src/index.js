@@ -6,10 +6,12 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import searchReducer from "./features/Search"
+import searchReducer from "./features/Search";
+import ImageSwapper from './features/ImageSwapper';
 const store=configureStore({
   reducer:{
-    searchStore:searchReducer
+    searchStore:searchReducer,
+    imageSwapperStore:ImageSwapper
   }
 })
 
