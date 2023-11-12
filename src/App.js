@@ -3,13 +3,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import HomePage from './view/pages/HomePage';
 import Profile from './view/pages/profile/Profile';
+import { Route,Routes } from 'react-router-dom';
+import Signup from './view/pages/signup/Signup';
+import Login from './view/pages/login/Login';
 function App() {
   return (
-    <div className="App" style={{fontFamily:"'Montserrat', sans-serif;",color:"black"}}>
+    <div className="App">
    
+<Routes >
+  <Route path= "/" element ={<HomePage/>}  />
+  <Route path= "/profile/:id" element ={<Profile/>}  />
+  <Route path= "/signup" element ={<Signup/>}  />
 
-   {/* <HomePage/>*/}
-<Profile/>
+  <Route path= "/login" element ={<Login/>}  />
+
+</Routes>
     
     </div>
   );

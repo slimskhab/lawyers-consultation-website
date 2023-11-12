@@ -9,8 +9,9 @@ const searchSlice=createSlice({
     reducers:{
         filterList: (state, action) => {
             state.data = userData.filter((e, index) => {
-              return e.name.toLowerCase().includes(action.payload);
+              return e.username.toLowerCase().includes(action.payload);
             }); 
+        
           },
         clearList:(state,action)=>{
             state.data=[];

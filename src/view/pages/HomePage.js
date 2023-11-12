@@ -2,14 +2,14 @@ import React from 'react';
 import Header from '../components/header/Header';
 import MostDonated from "../components/mostDonated/MostDonated"
 import HowItWorks from "../components/howItWorks/HowItWorks"
-import HomepageFooter from "../components/homepageFooter/HomepageFooter"
+import Footer from '../components/footer/Footer';
 function HomePage(props) {
     return (
         <div>
             <Header/>
       <MostDonated/>
       <HowItWorks/>
-      <HomepageFooter/>
+      <Footer/>
         </div>
     );
 }

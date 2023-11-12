@@ -1,6 +1,7 @@
 import React from 'react';
 import "./Footer.css"
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 function Footer(props) {
     return (
         <div className='footer'>
@@ -18,7 +19,7 @@ function Footer(props) {
                     </ul>
                     <ul className='footer-bar'>
                         <li className='nav-text'>+216 22 156 111</li>
-                        <li className='nav-text' style={{ border: "none" }}>slimsskhab@gmail.com</li>
+                        <li className='nav-text' style={{ border: "none" }}>Lawyers@gmail.com</li>
                     </ul>
                 </nav>
             </div>
@@ -34,7 +35,7 @@ function Footer(props) {
   <path d="M12.005 8.49853C12.0045 9.40005 11.6459 10.2645 11.0082 10.9016C10.3704 11.5388 9.5056 11.8965 8.60408 11.896C7.70256 11.8956 6.83815 11.537 6.201 10.8992C5.56385 10.2614 5.20615 9.39665 5.2066 8.49513C5.20706 7.59362 5.56561 6.7292 6.2034 6.09205C6.84119 5.4549 7.70596 5.09721 8.60748 5.09766C9.509 5.09811 10.3734 5.45667 11.0106 6.09445C11.6477 6.73224 12.0054 7.59702 12.005 8.49853ZM12.1069 14.4131H5.30858V35.6919H12.1069V14.4131ZM22.8483 14.4131H16.084V35.6919H22.7803V24.5257C22.7803 18.3052 30.8874 17.7273 30.8874 24.5257V35.6919H37.6008V22.2142C37.6008 11.7278 25.6017 12.1187 22.7803 17.2684L22.8483 14.4131Z" fill="white"/>
 </svg>
                 </div>
-            <span className='copyrights-text'>© Copyright 2023 | Shay Designs</span>
+                <span className='copyrights-text'>Copyright © 2023 LawyersConsultation | Made with <FontAwesomeIcon style={{ color: 'red', fontSize: '24px' }} icon={faHeart} /> By Software Engineering Student G2</span>
             </div>
         </div>
     );

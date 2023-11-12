@@ -2,37 +2,18 @@ import React from 'react';
 import Footer from "../../components/footer/Footer"
 import SmallNavBar from '../../components/smallnavigationbar/SmallNavBar';
 import "./Profile.css"
-import Milestone from '../../components/milestone/Milestone';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectImage, setImages, swapImageLeft, swapImageRight } from '../../../features/ImageSwapper';
-import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { userData } from '../../../Data';
+function Profile() {
+   
+    const params=useParams();
+    const user= userData.find((element) => element.id== params.id);
 
-function Profile(props) {
-    var donation = "50";
-    var firstMilestoneIsActive = false;
-    var secondMilestoneIsActive = false;
-    var thirdMilestoneIsActive = false;
-    var forthMilestoneIsActive = false;
-    const dispatch = useDispatch();
 
-    function changeMilestone() {
-        firstMilestoneIsActive = true;
-    }
-    changeMilestone();
     var firstImageLink = "https://images.unsplash.com/photo-1481349518771-20055b2a7b24?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fHww"
-    var secondImageLink = "https://repository-images.githubusercontent.com/260096455/47f1b200-8b2e-11ea-8fa1-ab106189aeb0"
-    var thirdImageLink = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3m18L2DEROZg6VhtnYKc05oTvqkQXR3qclDy6Z1L9PQ&s"
-    var forthImageLink = "https://thumbs.dreamstime.com/z/random-click-squirrel-wire-random-picture-cute-squirrel-219506797.jpg"
-    var fifthImageLink = "https://hatrabbits.com/wp-content/uploads/2017/01/random-word-1.jpg"
 
+    var Bio="lorem"
 
-    const images = useSelector((state) => state.imageSwapperStore.data);
-
-    var additionalInfos = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-
-    useEffect(() => {
-        dispatch(setImages([firstImageLink, secondImageLink, thirdImageLink, forthImageLink, fifthImageLink]));
-    }, [])
 
 
     return (
@@ -42,43 +23,19 @@ function Profile(props) {
             <div className='main-profile-container'>
                 <div className='profile-images-container'>
 
-                    <div style={{ width: 48 }}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" onClick={() => {
-                            dispatch(swapImageLeft());
-                        }}>
-                            <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
+                   
                     <div>
 
                         <div className='profile-main-image-container'>
 
-                            <img src={images[0]} alt="name" ></img>
+                            <img src={firstImageLink} alt="name" ></img>
 
                         </div>
-                        <div >
-
-                            <div className='profile-secondary-images'>
-                                <img src={images[1]} alt="name" onClick={() => {
-                                    dispatch(selectImage(1));
-                                }}></img>
-                                <img src={images[2]} alt="name" onClick={() => {
-                                    dispatch(selectImage(2));
-                                }}></img>
-                                <img src={images[3]} alt="name" onClick={() => {
-                                    dispatch(selectImage(3));
-                                }}></img>
-                            </div>
-
-                        </div>
+                        
                     </div>
                     <div style={{ width: 48 }}>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" onClick={() => {
-                            dispatch(swapImageRight())
-                        }}>
-                            <path d="M18 12L30 24L18 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
+                    
                     </div>
 
                 </div>
@@ -89,7 +46,7 @@ function Profile(props) {
                         <div style={{ display: "flex" }}><h1 className='profile-title'>Slim Skhab</h1><sup className='sup-text'>trusted</sup>
                         </div>
                         <div className='claim-profile-button'>
-                            Claim This Profile
+                            Contact Lawyer
                         </div>
 
                     </div>
@@ -153,30 +110,6 @@ function Profile(props) {
                     </div>
 
 
-                    <div className="progress-bar-container">
-
-                        <div className="progress-box">
-                            <span className="mini-title">Donation Progress:</span>
-                            <div className="skill-bar">
-                                <span className="progress-per" style={{ width: `${donation}%` }}>
-                                    <span className="tooltips">$95</span>
-                                </span>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div className='milestones-container'>
-                        <span className="mini-title">Milestones:</span>
-
-                        <Milestone milestoneName="First Milestone" milestoneNumber="1" milestoneRange="500$ to 1000$" milestoneColor="#26ADEB" milestoneActiveColor="rgba(38, 173, 235, 0.14)" isActive={firstMilestoneIsActive} />
-                        <br></br>
-                        <Milestone milestoneName="Second Milestone" milestoneNumber="2" milestoneRange="1000$ to 2000$" milestoneColor="#FA7193" milestoneActiveColor="rgba(250, 113, 147, 0.14)" isActive={secondMilestoneIsActive} />
-                        <br></br>
-                        <Milestone milestoneName="Third Milestone" milestoneNumber="3" milestoneRange="2000$ to 3000$" milestoneColor="#8183FE" milestoneActiveColor="rgba(129, 131, 254, 0.14)" isActive={thirdMilestoneIsActive} />
-                        <br></br>
-                        <Milestone milestoneName="Forth Milestone" milestoneNumber="4" milestoneRange="3000$+" milestoneColor="#46DDB9" milestoneActiveColor="rgba(70, 221, 185, 0.14)" isActive={forthMilestoneIsActive} />
-
-                    </div>
                 </div>
             </div>
             <br></br>
@@ -185,7 +118,7 @@ function Profile(props) {
                     <div className='vote-buttons-compact'>
                         <div style={{ width: 48, opacity: 0 }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                                <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M30 12L18 24L30 36" stroke="#001F3F" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </div>
                         <div className='vote-button natty'>
@@ -198,7 +131,7 @@ function Profile(props) {
                         </div>
                         <div style={{ width: 48, opacity: 0 }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                                <path d="M30 12L18 24L30 36" stroke="#001F3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M30 12L18 24L30 36" stroke="#001F3F" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </div>
                     </div>
@@ -212,15 +145,15 @@ function Profile(props) {
 
             <br></br>
 
-            {additionalInfos.length !== 0 && (
+             
                 <div className='additional-infos-container'>
-                    <h1 className='profile-title' style={{ textAlign: "start" }}>Additional Information</h1>
+                    <h1 className='profile-title' style={{ textAlign: "start" }}>Bio:</h1>
                     <br></br>
-                    <p style={{ textAlign: "start" }}>
-                        {additionalInfos}
+                    <p style={{ textAlign: "start",color:"black" }}>
+                        {Bio}
                     </p>
                 </div>
-            )}
+            
             <Footer />
         </div>
     );

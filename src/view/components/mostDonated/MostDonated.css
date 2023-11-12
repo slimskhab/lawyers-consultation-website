@@ -66,6 +66,10 @@ font-style: normal;
 font-weight: 300;
 }
 
+a{
+    text-decoration: none;
+}
+
 .instagram-text{
     color: #333;
 font-family: "Montserrat",;
@@ -74,6 +78,7 @@ width: 100%;
 
 font-style: normal;
 font-weight: 500;
+cursor: pointer;
 
 }
 
