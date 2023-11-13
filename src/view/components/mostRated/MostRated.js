@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import "./MostDonated.css"
-import { Route, Routes, useNavigate } from 'react-router-dom';
-import { userData } from '../../../Data';
-import { setContainerRef } from '../../../features/InPageNav';
-import { useDispatch } from 'react-redux';
-function MostDonated(props) {
+import "./MostRated.css"
+import {useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import RatingStars from '../RatingStars';
+function MostRated(props) {
     const navigate = useNavigate();
     const [deviceWidth, setDeviceWidth] = useState(window.innerWidth);
-
+    const [lawyers,setLawyers]=useState();
     useEffect(() => {
         const handleResize = () => {
             setDeviceWidth(window.innerWidth);
@@ -24,29 +23,37 @@ function MostDonated(props) {
         document.documentElement.style.setProperty('--device-width', `${deviceWidth}px`);
     }, [deviceWidth]);
 
+    useEffect(()=>{
+        axios.post("http://localhost:6005/lawyer",{
+            limit:6
+        }).then((response)=>{
+            setLawyers(response.data.lawyers)
+        })
+    })
+
     return (
         <div className='mostdonated-container'>
-            <h1 className="title">Most Donated Athletes</h1>
+            <h1 className="title">Most Rated Lawyers</h1>
             <p className='text-style'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
             <div className='users-container'>
-                {
-                    userData.map((user, index) => {
+            
+                {lawyers&&
+                    lawyers.map((user, index) => {
                         if (index < 3) {
-                            var igLink = `https://instagram.com/${user.ig}`;
                             return (
                                 <div className="user-card" key={user.id}>
 
                                     <img src="/user.png" alt="name" onClick={() => {
-                                        navigate(`/profile/${user.id}`);
+                                        navigate(`/lawyer/${user.id}`);
                                     }}></img>
                                     <div className='info-card'>
-                                        <h2 className='username-text'>{user.username}</h2>
-                                        <span className='donation-text'> ${user.totalDonations} Donations</span>
-                                        <a href={igLink} target="_blank"><span className='instagram-text'>@{user.ig}</span></a>
+                                        <h2 className='username-text'>{user.firstName} {user.lastName}</h2>
+                                        <span className='donation-text'><RatingStars rating={user.rating}/></span>
+                                        <span className='instagram-text'></span>
                                         <div className='custom-button'>
                                             <span className='button-text-profile' onClick={() => {
-                                                navigate(`/profile/${user.id}`);
+                                                navigate(`/lawyer/${user.id}`);
                                             }}>
                                                 View Profile
                                             </span>
@@ -55,21 +62,23 @@ function MostDonated(props) {
 
                                 </div>
                             )
+                        }else{
+                            return ;
                         }
 
                     })
                 }
             </div>
             <div className='users-container'>
-            {
-                    userData.map((user, index) => {
+                {lawyers&&
+                    lawyers.map((user, index) => {
                         if (index >= 3) {
                             var igLink = `https://instagram.com/${user.ig}`;
                             return (
                                 <div className="user-card" key={user.id}>
 
                                     <img src="/user.png" alt="name" onClick={() => {
-                                        navigate(`/profile/${user.id}`);
+                                        navigate(`/lawyer/${user.id}`);
                                     }}></img>
                                     <div className='info-card'>
                                         <h2 className='username-text'>{user.username}</h2>
@@ -77,7 +86,7 @@ function MostDonated(props) {
                                         <a href={igLink} target="_blank"><span className='instagram-text'>@{user.ig}</span></a>
                                         <div className='custom-button'>
                                             <span className='button-text-profile' onClick={() => {
- navigate(`/profile/${user.id}`);
+                                                navigate(`/lawyer/${user.id}`);
 
                                             }}>
                                                 View Profile
@@ -87,6 +96,8 @@ function MostDonated(props) {
 
                                 </div>
                             )
+                        }else{
+                            return ;
                         }
 
                     })
@@ -98,4 +109,4 @@ function MostDonated(props) {
     );
 }
 
-export default MostDonated;
+export default MostRated;

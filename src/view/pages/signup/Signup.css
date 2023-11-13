@@ -57,3 +57,84 @@ font-weight: 600;
 line-height: 54px; /* 225% */
 cursor: pointer;
 }
+
+.degree-container{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 80%;
+height: 121px;
+border-radius: 29px;
+border: 4px dashed #003C73;
+background: #FFF;
+flex-shrink: 0;
+}
+
+.select-button{
+    border-radius: 38px;
+border: 1px solid #003C73;
+width: 163px;
+height: 38px;
+flex-shrink: 0;
+color: #003C73;
+font-family: "Raleway",sans-serif;
+font-size: 18px;
+font-style: normal;
+font-weight: 700;
+line-height: 108.1%; /* 19.458px */
+letter-spacing: 0.9px;
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+}
+
+.select-file-text{
+    color: #000;
+font-family: "Helvetica",sans-serif;
+font-size: 23px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+}
+
+.file-types-text{
+    color: rgba(0, 0, 0, 0.40);
+font-family: "Helvetica",sans-serif;
+font-size: 22px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+}
+
+.isselected-button{
+    background-color: var(--main-color);
+    height: 50px;
+    width: 200px;
+    color: white;
+text-align: center;
+font-family: "Montserrat",sans-serif;
+font-size: 20px;
+font-style: normal;
+font-weight: 600;
+line-height: 54px;
+cursor: pointer;
+}
+
+.error-message{
+    color: red;
+    font-weight: bold;
+}
+.isnotselected-button{
+    border: var(--main-color) 1px solid;
+    height: 50px;
+    width: 200px;
+    color: var(--main-color);
+    text-align: center;
+    font-family: "Montserrat",sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 54px;
+    cursor: pointer;
+}
