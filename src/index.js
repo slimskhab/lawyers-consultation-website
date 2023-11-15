@@ -8,13 +8,16 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import searchReducer from "./features/Search";
 import { BrowserRouter } from 'react-router-dom';
-import InPageNav from './features/InPageNav';
+import InPageNavReducer from './features/InPageNav';
 import ScrollToTop from './Helpers';
+import authentificateReducer from './features/Authentification';
+import messageReducer from "./features/Message"
 const store=configureStore({
   reducer:{
     searchStore:searchReducer,
-    pageNavStore:InPageNav,
-
+    pageNavStore:InPageNavReducer,
+    authentificateStore:authentificateReducer,
+    messageStore:messageReducer
   }
 })
 

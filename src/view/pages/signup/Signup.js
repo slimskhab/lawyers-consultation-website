@@ -1,9 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState ,useEffect} from 'react';
 import SmallNavBar from '../../components/smallnavigationbar/SmallNavBar';
 import Footer from '../../components/footer/Footer';
 import "./Signup.css"
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { authentificate, authentificateClient, authentificateLawyer } from '../../../features/Authentification';
+import { useDispatch,useSelector } from 'react-redux';
 function Signup(props) {
     const [isSelected, setIsSelected] = useState(true);
     const firstNameRef = useRef();
@@ -11,7 +13,7 @@ function Signup(props) {
     const passwordRef = useRef();
     const bioRef = useRef();
     const emailRef = useRef();
-
+    const dispatch=useDispatch();
     const [firstNameError, setFirstNameError] = useState('');
     const [lastNameError, setLastNameError] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -19,6 +21,14 @@ function Signup(props) {
     const [bioError, setBioError] = useState('');
 
 const navigate=useNavigate();
+const isLoggedIn=useSelector((state)=>state.authentificateStore.isLoggedIn);
+
+useEffect(() => {
+
+    if (isLoggedIn) {
+      navigate('/');
+    }
+  }, [isLoggedIn]);
 
     const handleSubmitClick = () => {
 
@@ -67,8 +77,10 @@ const navigate=useNavigate();
                     email: emailRef.current.value,
                     bio: bioRef.current.value
                 }
-                axios.post("http://localhost:6005/lawyer", requestData).then((response) => {
+                axios.post("http://localhost:6005/lawyer/signup", requestData).then((response) => {
                     console.log(response.data);
+                    dispatch(authentificateLawyer(response.data.lawyer))
+
                     navigate('/');
                 }).catch((e) => {
                     console.log(e);
@@ -113,6 +125,7 @@ const navigate=useNavigate();
                 }
                 axios.post("http://localhost:6005/client", requestData).then((response) => {
                     console.log(response.data);
+                    dispatch(authentificateClient(response.data.client))
                     navigate('/');
 
                 }).catch((e) => {

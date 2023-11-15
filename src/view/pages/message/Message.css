@@ -1,0 +1,104 @@
+
+.big-chat-container{
+    font-family: "Montserrat",sans-serif;
+    display: flex;
+    height: 700px;
+    width: 80%;
+    padding: 50px;
+}
+
+.chats-container{
+    width: 30%;
+    border: 1px var(--main-color) solid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.singlechat-container{
+    width: 70%;
+    border: 1px var(--main-color) solid;
+}
+
+.chat-container{
+    font-family: "Montserrat",sans-serif;
+    border-radius: 5px;
+    background-color: gainsboro;
+    font-size: 16px;
+    padding: 10px 10px 5px 10px;
+    color: var(--main-color);
+    width: 90%;
+    margin-bottom: 10px;
+    cursor: pointer;
+    display: flex;
+    font-weight: lighter;
+    text-align: start;
+    margin: none;
+}
+
+.chat-title{
+    font-size: 30px;
+    width: 100%;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+    color: var(--main-color);
+    text-align: start;
+}
+
+.main-messages-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+.messages-content{
+    max-height: 90%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+
+    
+}
+.sending-message{
+    height: 10%;
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    justify-content: space-around;
+}
+.sending-button{
+    width: 25%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: var(--main-color);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.input-container{
+    width: 73%;
+    height: 100%;
+    border-radius: 10px;
+    border: 1px var(--main-color) solid
+}
+
+.received-message{
+    background-color: var(--main-color);
+    max-width: 90%;
+    padding: 10px;
+    text-align: start;
+    border-radius: 10px;
+}
+
+.sent-message{
+    background-color: var(--main-color);
+    max-width: 90%;
+    padding: 10px;
+    text-align: start;
+    border-radius: 10px;
+}

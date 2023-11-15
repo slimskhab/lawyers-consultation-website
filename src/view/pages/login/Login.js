@@ -1,48 +1,59 @@
 import React from 'react';
 import SmallNavBar from '../../components/smallnavigationbar/SmallNavBar';
 import Footer from '../../components/footer/Footer';
-import { useState,useRef } from 'react';
+import { useState, useRef,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch,useSelector } from 'react-redux';
+import {  authentificateClient, authentificateLawyer } from '../../../features/Authentification';
 function Login(props) {
     const [isSelected, setIsSelected] = useState(true);
-    const [loginError,setLoginError]=useState("");
+    const [loginError, setLoginError] = useState("");
     const passwordRef = useRef();
     const emailRef = useRef();
-    const navigate=useNavigate();
-    const handleLogin=()=>{
-        if(isSelected){
-            axios.post("http://localhost:6005/lawyer/login",{
-                "email":emailRef.current.value,
-                "password":passwordRef.current.value
-            }).then((response)=>{
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const isLoggedIn=useSelector((state)=>state.authentificateStore.isLoggedIn);
+
+useEffect(() => {
+
+    if (isLoggedIn) {
+      navigate('/');
+    }
+  }, [isLoggedIn]);
+
+    const handleLogin = () => {
+        if (isSelected) {
+            axios.post("http://localhost:6005/lawyer/login", {
+                "email": emailRef.current.value,
+                "password": passwordRef.current.value
+            }).then((response) => {
                 console.log(response);
-
-                if(response.status===200){
+                if (response.status === 200) {
+                    dispatch(authentificateLawyer(response.data.lawyer))
                     navigate("/")
-                }else{
-                    console.log("errorrrr");
                 }
-                
-            }).catch((e)=>{
-                if(e.response.status===401){
-                    setLoginError('Email or password are wrong');
 
+            }).catch((e) => {
+                if (e.response.status === 401) {
+                    setLoginError('Email or password are wrong');
                 }
                 console.log(e);
             })
-        }else{
-            axios.post("http://localhost:6005/client/login",{
-                "email":emailRef.current.value,
-                "password":passwordRef.current.value
-            }).then((response)=>{
+        } else {
+            axios.post("http://localhost:6005/client/login", {
+                "email": emailRef.current.value,
+                "password": passwordRef.current.value
+            }).then((response) => {
 
-                if(response.status===200){
-                    navigate("/")
+                if (response.status === 200) {
+                    dispatch(authentificateClient(response.data.client))
+                    navigate("/");
                 }
-                
-            }).catch((e)=>{
-                if(e.response.status===401){
+
+            }).catch((e) => {
+                if (e.response.status === 401) {
                     setLoginError('Email or password are wrong');
                 }
                 console.log(e);
@@ -51,7 +62,7 @@ function Login(props) {
     }
     return (
         <div>
-            <SmallNavBar/>
+            <SmallNavBar />
             <div style={{ padding: "50px", display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
                 <div className='d-flex'>
                     <div className={isSelected ? 'isselected-button' : 'isnotselected-button'} onClick={() => {
@@ -88,12 +99,12 @@ function Login(props) {
                     </div>
 
                 </div><br></br>
-                
+
                 <div className='submit-button' onClick={handleLogin}>
                     Login
                 </div>
             </div>
-            <Footer/>
+            <Footer />
 
         </div>
     );
