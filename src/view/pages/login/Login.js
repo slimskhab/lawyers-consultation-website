@@ -46,7 +46,7 @@ useEffect(() => {
                 "email": emailRef.current.value,
                 "password": passwordRef.current.value
             }).then((response) => {
-
+console.log(response);
                 if (response.status === 200) {
                     dispatch(authentificateClient(response.data.client))
                     navigate("/");
