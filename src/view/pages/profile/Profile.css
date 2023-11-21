@@ -213,7 +213,8 @@
 .vote-buttons{
     width: 40%;
     display: flex;
-    justify-content: end;
+    justify-content: center;
+    flex-direction: column;
 }
 
 

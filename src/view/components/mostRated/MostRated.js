@@ -28,8 +28,10 @@ function MostRated(props) {
             limit:6
         }).then((response)=>{
             setLawyers(response.data.lawyers)
+        }).catch((e)=>{
+            console.log(e);
         })
-    })
+    },[lawyers])
 
     return (
         <div className='mostdonated-container'>
@@ -49,7 +51,7 @@ function MostRated(props) {
                                     }}></img>
                                     <div className='info-card'>
                                         <h2 className='username-text'>{user.firstName} {user.lastName}</h2>
-                                        <span className='donation-text'><RatingStars rating={user.rating}/></span>
+                                        <span className='donation-text'><RatingStars rating={user.rating} size="15px"/></span>
                                         <span className='instagram-text'></span>
                                         <div className='custom-button'>
                                             <span className='button-text-profile' onClick={() => {

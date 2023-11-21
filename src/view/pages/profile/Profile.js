@@ -2,23 +2,24 @@ import React from 'react';
 import Footer from "../../components/footer/Footer"
 import SmallNavBar from '../../components/smallnavigationbar/SmallNavBar';
 import "./Profile.css"
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { userData } from '../../../Data';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import RatingStars from '../../components/RatingStars';
 function Profile() {
 
     const params = useParams();
     const [user,setUser]=useState("");
-
+    const myId=useSelector((state)=>state.authentificateStore.user.id)
     var firstImageLink = "https://images.unsplash.com/photo-1481349518771-20055b2a7b24?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fHww"
-
+const navigate=useNavigate();
     
 useEffect(()=>{
     axios.get(`http://localhost:6005/lawyer/${params.id}`).then((response)=>{
         setUser(response.data.lawyer);
-        console.log(user);
     }).catch((e)=>{
         console.log(e);
     })
@@ -54,7 +55,14 @@ useEffect(()=>{
 
                         <div style={{ display: "flex" }}><h1 className='profile-title'>{user ? `${user.firstName} ${user.lastName}` : 'Loading...'}</h1><sup className='sup-text'>Trusted</sup>
                         </div>
-                        <div className='claim-profile-button'>
+                        <div className='claim-profile-button' onClick={()=>{
+                            axios.post("http://localhost:6005/chat",{
+                                lawyerId:params.id,
+                                clientId:myId
+                            }).then((response)=>{
+                                navigate("/messages")
+                            })
+                        }}>
                             Contact Lawyer
                         </div>
 
@@ -71,28 +79,11 @@ useEffect(()=>{
                 </div>
             </div>
             <br></br>
-            <div className='button-container'>
+            <div className='button-container' >
                 <div className='vote-buttons'>
-                    <div className='vote-buttons-compact'>
-                        <div style={{ width: 48, opacity: 0 }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                                <path d="M30 12L18 24L30 36" stroke="#001F3F" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </div>
-                        <div className='vote-button natty'>
-                            <span className='vote-button-text'>Natty</span>
-                            <span className='vote-button-number'>200 Votes</span>
-                        </div>
-                        <div className='vote-button enhanced'>
-                            <span className='vote-button-text'>Enhanced</span>
-                            <span className='vote-button-number'>200 Votes</span>
-                        </div>
-                        <div style={{ width: 48, opacity: 0 }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                                <path d="M30 12L18 24L30 36" stroke="#001F3F" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </div>
-                    </div>
+                <span style={{fontSize:"20px",color:'var(--main-color)',fontWeight:"bold"}}>Rating : {user.rating}</span>
+
+                <RatingStars rating={user.rating} size={"30px"}/>
 
 
                 </div>

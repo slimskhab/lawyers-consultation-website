@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RatingStars = ({ rating }) => {
+const RatingStars = ({ rating ,size}) => {
   const maxStars = 5;
   const goldStars = Math.round(rating); // Round to the nearest whole number
 
@@ -18,7 +18,7 @@ const RatingStars = ({ rating }) => {
     return stars;
   };
 
-  return <div className="rating-stars">{renderStars()}</div>;
+  return <div className="rating-stars" style={{fontSize:size}}>{renderStars()}</div>;
 };
 
 export default RatingStars;

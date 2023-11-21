@@ -7,7 +7,7 @@ const messageSlice=createSlice({
       ],
        isLoadgin:false,
        chats:[],
-       selectedChatId:0,
+       selectedChat:{id:0},
     },
     reducers:{
        initializeMessages:(state,action)=>{
@@ -21,10 +21,15 @@ const messageSlice=createSlice({
          state.chats=action.payload
        },
        selectChat:(state,action)=>{
-         state.selectedChatId=action.payload;
+         state.selectedChat=action.payload;
+       },
+       removeMessage:(state,action)=>{
+        state.messages=state.messages.filter((e,index)=>{
+          return e.id!==action.payload
+        })
        }
     }
 })
 
-export const {initializeMessages,sendMessage,initializeChats,selectChat}=messageSlice.actions;
+export const {initializeMessages,sendMessage,initializeChats,selectChat,removeMessage}=messageSlice.actions;
 export default messageSlice.reducer

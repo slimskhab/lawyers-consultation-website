@@ -46,7 +46,7 @@ width: 100%;
     width: 352px;
 height: 52px;
 flex-shrink: 0;
-border-radius: 30px 0px;
+border-radius: 30px 30px 30px 0px;
 background: #E53935;
 color: #FFF;
 text-align: center;
@@ -56,6 +56,23 @@ font-style: normal;
 font-weight: 600;
 line-height: 54px; /* 225% */
 cursor: pointer;
+}
+
+.test-button{
+    width: 352px;
+height: 52px;
+flex-shrink: 0;
+border-radius: 30px 0px 30px 30px;
+background: #E53935;
+color: #FFF;
+text-align: center;
+font-family: "Montserrat",sans-serif;
+font-size: 24px;
+font-style: normal;
+font-weight: 600;
+line-height: 54px; /* 225% */
+cursor: pointer;
+margin-left: 20px;
 }
 
 .degree-container{

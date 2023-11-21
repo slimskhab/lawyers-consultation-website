@@ -1,11 +1,11 @@
 import React from 'react';
 import SmallNavBar from '../../components/smallnavigationbar/SmallNavBar';
 import Footer from '../../components/footer/Footer';
-import { useState, useRef,useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useDispatch,useSelector } from 'react-redux';
-import {  authentificateClient, authentificateLawyer } from '../../../features/Authentification';
+import { useDispatch, useSelector } from 'react-redux';
+import { authentificateClient, authentificateLawyer } from '../../../features/Authentification';
 function Login(props) {
     const [isSelected, setIsSelected] = useState(true);
     const [loginError, setLoginError] = useState("");
@@ -14,14 +14,14 @@ function Login(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const isLoggedIn=useSelector((state)=>state.authentificateStore.isLoggedIn);
+    const isLoggedIn = useSelector((state) => state.authentificateStore.isLoggedIn);
 
-useEffect(() => {
+    useEffect(() => {
 
-    if (isLoggedIn) {
-      navigate('/');
-    }
-  }, [isLoggedIn]);
+        if (isLoggedIn) {
+            navigate('/');
+        }
+    }, [isLoggedIn]);
 
     const handleLogin = () => {
         if (isSelected) {
@@ -46,7 +46,7 @@ useEffect(() => {
                 "email": emailRef.current.value,
                 "password": passwordRef.current.value
             }).then((response) => {
-console.log(response);
+                console.log(response);
                 if (response.status === 200) {
                     dispatch(authentificateClient(response.data.client))
                     navigate("/");
@@ -58,6 +58,17 @@ console.log(response);
                 }
                 console.log(e);
             })
+        }
+    }
+
+    const handleTest = () => {
+        if (isSelected) {
+            emailRef.current.value = "slim@gmail.com";
+            passwordRef.current.value = "123123123"
+
+        } else {
+            emailRef.current.value = "chaima@gmail.com";
+            passwordRef.current.value = "123"
         }
     }
     return (
@@ -99,10 +110,16 @@ console.log(response);
                     </div>
 
                 </div><br></br>
-
-                <div className='submit-button' onClick={handleLogin}>
-                    Login
+                <div className='d-flex'>
+                    <div className='submit-button' onClick={handleLogin}>
+                        Login
+                    </div>
+                    <div className='test-button' onClick={handleTest}>
+                        Get Test Profile
+                    </div>
                 </div>
+
+
             </div>
             <Footer />
 
