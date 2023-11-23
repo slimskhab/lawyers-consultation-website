@@ -84,8 +84,12 @@
     width: 73%;
     height: 100%;
     border-radius: 10px;
-    border: 1px var(--main-color) solid
-}
+    border: 1px var(--main-color) solid;
+  }
+
+  input{
+    color: black;
+  }
 
 .received-message{
     background-color: var(--main-color);
@@ -153,7 +157,6 @@ background: var(--main-color);
   }
 
   .contract-block{
-    height: 200px;
     width: 90%;
     background-color: green;
     border-radius: 20px;

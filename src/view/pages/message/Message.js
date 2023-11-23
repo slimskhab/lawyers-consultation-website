@@ -15,10 +15,10 @@ import ScrollableFeed from 'react-scrollable-feed';
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
-import Form from 'react-bootstrap/Form';
+import { useToast } from '@chakra-ui/react';
 
 const ENDPOINT = "http://localhost:6005"
-var socket, selectedChatCompate;
+var socket;
 function Message(props) {
     const user = useSelector((state) => state.authentificateStore.user)
     const chats = useSelector((state) => state.messageStore.chats)
@@ -30,7 +30,8 @@ function Message(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [typing, setTyping] = useState(false);
     const [otherUserId, setOtherUserId] = useState();
-
+    const [otherUser, setOtherUser] = useState();
+const toast=useToast();
     const [isTyping, setIsTyping] = useState(false);
     const [messageContent, setMessageContent] = useState("");
     const [startDate, setStartDate] = useState(new Date());
@@ -134,7 +135,17 @@ function Message(props) {
                         {chats &&
                             chats.map((e, index) => {
                                 return <div className='chat-container' onClick={() => {
-                                    setOtherUserId(e.users.find(userId => userId !== user.id))
+                                    var id=e.users.find(userId => userId !== user.id)
+                                    setOtherUserId(id);
+                                    
+                                    if(!isLawyer){
+                                        axios.get(`http://localhost:6005/lawyer/${id}`).then((res)=>{
+                                            setOtherUser(res.data.lawyer);
+                                            
+                                        }).catch((e)=>{
+                                            console.log(e);
+                                        })
+                                    }
                                     dispatch(selectChat(e));
                                     setIsLoading(true);
 
@@ -175,7 +186,7 @@ function Message(props) {
                                         </div>
                                         <ScrollableFeed className='scroll'>
                                             {messages &&
-                                                messages.map((e, index) => {
+                                                messages.map((e, index,array) => {
 
                                                     if (e.senderId === user.id) {
                                                         if (e.isContract) {
@@ -234,12 +245,24 @@ function Message(props) {
                                                                                         socket.emit("new message", response.data.message)
                                                                                         dispatch(sendMessage(response.data.message));
                                                                                         inputRef.current.value = "";
-
+                                                                                        toast({
+                                                                                            title: "Sent contract!",
+                                                                                            status: "success",
+                                                                                            duration: 5000,
+                                                                                            isClosable: true,
+                                                                                            position: "bottom",
+                                                                                          });
                                                                                     }).catch((e) => {
                                                                                         console.log(e);
                                                                                     })
                                                                                 } else {
-                                                                                    console.log("wrong signature");
+                                                                                    toast({
+                                                                                        title: "Wrong signature!",
+                                                                                        status: "error",
+                                                                                        duration: 5000,
+                                                                                        isClosable: true,
+                                                                                        position: "bottom",
+                                                                                      });
                                                                                 }
 
 
@@ -377,12 +400,24 @@ function Message(props) {
                                                                                         dispatch(removeMessage(e.id))
                                                                                         
                                                                                       dispatch(sendMessage(response.data.message))
-                                                                                        
+                                                                                      toast({
+                                                                                        title: "Accepted contract!",
+                                                                                        status: "success",
+                                                                                        duration: 5000,
+                                                                                        isClosable: true,
+                                                                                        position: "bottom",
+                                                                                      });
                                                                                     }).catch((e) => {
                                                                                         console.log(e);
                                                                                     })
                                                                                 } else {
-                                                                                    console.log("wrong signature");
+                                                                                    toast({
+                                                                                        title: "Wrong signature!",
+                                                                                        status: "error",
+                                                                                        duration: 5000,
+                                                                                        isClosable: true,
+                                                                                        position: "bottom",
+                                                                                      });
                                                                                 }
 
 
@@ -433,7 +468,22 @@ function Message(props) {
                                                             }
 
                                                         } else {
-                                                            return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", justifyContent: "start" }}>
+                                                            
+                                                            return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", justifyContent: "start",alignItems:"center" }}>
+                                                               {
+                                                                array[index + 1]?
+                                                                
+                                                                array[index + 1].senderId===user.id?
+                                                               // otherUser&&
+                                                                !isLawyer&& <img src={otherUser.profilePic?otherUser.profilePic:"./user.png"} style={{height:40,width:40,borderRadius:40,marginRight:10}}>
+
+                                                                </img>:<div style={{width:50}}></div>
+                                                                : 
+                                                                //otherUser&&
+                                                                !isLawyer&& <img src={otherUser.profilePic?otherUser.profilePic:"./user.png"} style={{height:40,width:40,borderRadius:40,marginRight:10}}>
+
+                                                                </img>
+                                                               }
                                                                 <div className='received-message'>
                                                                     {e.content}
                                                                 </div>

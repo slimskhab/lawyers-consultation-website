@@ -58,6 +58,7 @@
     padding-left: 107px;
     font-size: 24px;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .data-item:hover {

@@ -6,8 +6,8 @@ function Footer(props) {
     return (
         <div className='footer'>
             <div className='footer-container' style={{paddingTop:25}}>
-                <div>            <img src="/logo.png" style={{ height: 83, width: 83, justifyContent: "center" }}></img>
-                </div>
+                <img src="/logo.png" style={{ height: 83, width: 83 }}></img>
+                
 
                 <nav style={{ display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", paddingTop: "50px" }}>
                     <ul className='footer-bar'>

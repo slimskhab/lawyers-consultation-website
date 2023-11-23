@@ -46,7 +46,7 @@ function MostRated(props) {
                             return (
                                 <div className="user-card" key={user.id}>
 
-                                    <img src="/user.png" alt="name" onClick={() => {
+                                    <img src={user.profilePic?user.profilePic:"/user.png"} style={{height:250}} alt="name" onClick={() => {
                                         navigate(`/lawyer/${user.id}`);
                                     }}></img>
                                     <div className='info-card'>
@@ -75,17 +75,15 @@ function MostRated(props) {
                 {lawyers&&
                     lawyers.map((user, index) => {
                         if (index >= 3) {
-                            var igLink = `https://instagram.com/${user.ig}`;
                             return (
                                 <div className="user-card" key={user.id}>
 
-                                    <img src="/user.png" alt="name" onClick={() => {
+                                    <img src={user.profilePic} style={{height:250}} alt="name" onClick={() => {
                                         navigate(`/lawyer/${user.id}`);
                                     }}></img>
                                     <div className='info-card'>
-                                        <h2 className='username-text'>{user.username}</h2>
-                                        <span className='donation-text'> ${user.totalDonations} Donations</span>
-                                        <a href={igLink} target="_blank"><span className='instagram-text'>@{user.ig}</span></a>
+                                        <h2 className='username-text'>{user.firstName} {user.lastName}</h2>
+                                        <span className='donation-text'><RatingStars rating={user.rating} size="15px"/></span>
                                         <div className='custom-button'>
                                             <span className='button-text-profile' onClick={() => {
                                                 navigate(`/lawyer/${user.id}`);

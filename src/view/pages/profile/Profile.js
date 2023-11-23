@@ -7,19 +7,21 @@ import { userData } from '../../../Data';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import RatingStars from '../../components/RatingStars';
+import { selectChat } from '../../../features/Message';
 function Profile() {
 
     const params = useParams();
     const [user,setUser]=useState("");
-    const myId=useSelector((state)=>state.authentificateStore.user.id)
-    var firstImageLink = "https://images.unsplash.com/photo-1481349518771-20055b2a7b24?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cmFuZG9tfGVufDB8fDB8fHww"
+    const myId=useSelector((state)=>state.authentificateStore.user.id);
+    const isLawyer=useSelector((state)=>state.authentificateStore.isLawyer);
 const navigate=useNavigate();
-    
+    const dispatch=useDispatch()
 useEffect(()=>{
     axios.get(`http://localhost:6005/lawyer/${params.id}`).then((response)=>{
         setUser(response.data.lawyer);
+
     }).catch((e)=>{
         console.log(e);
     })
@@ -38,7 +40,7 @@ useEffect(()=>{
 
                         <div className='profile-main-image-container'>
 
-                            <img src={firstImageLink} alt="name" ></img>
+                            <img src={user.profilePic?user.profilePic:"../user.png"} alt="name" ></img>
 
                         </div>
 
@@ -55,16 +57,21 @@ useEffect(()=>{
 
                         <div style={{ display: "flex" }}><h1 className='profile-title'>{user ? `${user.firstName} ${user.lastName}` : 'Loading...'}</h1><sup className='sup-text'>Trusted</sup>
                         </div>
-                        <div className='claim-profile-button' onClick={()=>{
-                            axios.post("http://localhost:6005/chat",{
-                                lawyerId:params.id,
-                                clientId:myId
-                            }).then((response)=>{
-                                navigate("/messages")
-                            })
-                        }}>
-                            Contact Lawyer
-                        </div>
+                        {
+                            !isLawyer&&( <div className='claim-profile-button' onClick={()=>{
+                                axios.post("http://localhost:6005/chat",{
+                                    lawyerId:params.id,
+                                    clientId:myId
+                                }).then((response)=>{
+                                    console.log(response);
+                                    dispatch(selectChat(response.data.chat))
+                                    navigate("/messages")
+                                })
+                            }}>
+                                Contact Lawyer
+                            </div>)
+                        }
+                       
 
                     </div>
                  

@@ -8,6 +8,15 @@ font-weight: 600;
 line-height: 54px; /* 225% */
 }
 
+.radio-buttons{
+    color: #001F3F;
+text-align: center;
+font-family: "Montserrat",sans-serif;
+font-size: 24px;
+font-style: normal;
+font-weight: 600;
+}
+
 sup{
     color: #E53935;
 text-align: center;
@@ -40,6 +49,7 @@ width: 100%;
 
 .input-style{
     padding-left: 15px;
+    color:var(--main-color);
 }
 
 .submit-button{

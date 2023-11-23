@@ -1,23 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userData } from "../Data"; 
 const searchSlice=createSlice({
     name:"search",
     initialState:{
         isLoading:false,
-        data:[],
+        lawyers:[],
+        filteredList:[],
     },
     reducers:{
         filterList: (state, action) => {
-            state.data = userData.filter((e, index) => {
-              return e.username.toLowerCase().includes(action.payload);
+            state.filteredList = state.lawyers.filter((e, index) => {
+                var fullName=`${e.firstName} ${e.lastName}`;
+              return fullName.toLowerCase().includes(action.payload);
             }); 
         
           },
         clearList:(state,action)=>{
-            state.data=[];
+            state.filteredList=[];
+        },
+        setList:(state,action)=>{
+            state.lawyers=action.payload
         }
     }
 })
 
-export const {filterList,clearList}=searchSlice.actions;
+export const {filterList,clearList,setList}=searchSlice.actions;
 export default searchSlice.reducer

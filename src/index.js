@@ -11,21 +11,23 @@ import { BrowserRouter } from 'react-router-dom';
 import InPageNavReducer from './features/InPageNav';
 import ScrollToTop from './Helpers';
 import authentificateReducer from './features/Authentification';
-import messageReducer from "./features/Message"
-const store=configureStore({
-  reducer:{
-    searchStore:searchReducer,
-    pageNavStore:InPageNavReducer,
-    authentificateStore:authentificateReducer,
-    messageStore:messageReducer
+import messageReducer from "./features/Message";
+import { ChakraProvider } from '@chakra-ui/react'
+
+const store = configureStore({
+  reducer: {
+    searchStore: searchReducer,
+    pageNavStore: InPageNavReducer,
+    authentificateStore: authentificateReducer,
+    messageStore: messageReducer
   }
 })
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Provider store={store}>    <BrowserRouter><ScrollToTop /><App /></BrowserRouter>
-</Provider>
+    <Provider store={store}>    <BrowserRouter><ScrollToTop /><ChakraProvider><App /></ChakraProvider></BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
 
