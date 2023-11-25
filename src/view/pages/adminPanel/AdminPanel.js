@@ -5,7 +5,7 @@ import Footer from '../../components/footer/Footer'
 import { Button, Card, CardBody, Heading, Image, Stack, Text } from '@chakra-ui/react'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
-import { setInitLawyers, setSelectedLawyers } from '../../../features/AdminPanel'
+import { setInitLawyers, setSelectedLawyers, updatedUser } from '../../../features/AdminPanel'
 export default function AdminPanel() {
 const lawyers =useSelector((state)=>state.adminPanelStore.lawyers)
 const selectedLawyer =useSelector((state)=>state.adminPanelStore.selectedLawyer)
@@ -20,8 +20,8 @@ useEffect(()=>{
   return (
     <div>
         <SmallNavBar/>
-        <div className='d-flex'>
-            <div style={{width:"30%", background:"pink",display:"flex",flexDirection:"column"}}>
+        <div className='d-flex' style={{color:"black"}}>
+            <div style={{width:"30%",display:"flex",flexDirection:"column"}}>
             
             {lawyers.map((elt)=>{
                 return  <Card style={{margin:"10px", cursor:"pointer"}}
@@ -55,18 +55,37 @@ useEffect(()=>{
 <br></br>
           
             </div>
-            <div style={{width:"70%", background:"lightblue", display:"flex",flexDirection:"column"}}>
-                <img src={selectedLawyer.profilePic}></img>
-                <span>Fisrt Name: {selectedLawyer.firstName}</span>
-                <span>Last Name: {selectedLawyer.lastName}</span>
-                <span>Email: {selectedLawyer.email}</span>
-                <span>Bio: {selectedLawyer.bio}</span>
-                <span>Category: {selectedLawyer.category}</span>
-                <img src={selectedLawyer.certifImage}></img>
-                <Button colorScheme='teal' size='md'>
-                    Approved
-                </Button>
-                
+
+            <div style={{width:"70%",  display:"flex",flexDirection:"column"}}>
+              {
+selectedLawyer===0?
+<span>please select an account</span>:<div style={{display:"flex",flexDirection:"column"}}>
+<img src={selectedLawyer.profilePic}></img>
+<span>Fisrt Name: {selectedLawyer.firstName}</span>
+<span>Last Name: {selectedLawyer.lastName}</span>
+<span>Email: {selectedLawyer.email}</span>
+<span>Bio: {selectedLawyer.bio}</span>
+<span>Category: {selectedLawyer.category}</span>
+<img src={selectedLawyer.certifImage}></img>
+<Button colorScheme='teal' size='md' onClick={()=>{
+  axios.put(`http://localhost:6005/lawyer/update/${selectedLawyer.id}`,{
+  "status":1
+})
+dispatch(updatedUser())
+
+}}> 
+    Approve
+</Button>
+<Button colorScheme='red' size='md' onClick={()=>{axios.put(`http://localhost:6005/lawyer/update/${selectedLawyer.id}`,{
+"status":-1
+})
+dispatch(updatedUser())
+
+}}>Disapprove</Button>
+              </div>
+              }
+              
+
                 
             </div>
         </div>

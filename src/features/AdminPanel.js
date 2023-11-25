@@ -3,7 +3,7 @@ const AdminPanelSlice=createSlice({
     name:"AdminPanel",
     initialState:{
         lawyers:[],
-        selectedLawyer:{}
+        selectedLawyer:0
     },
     reducers:{
         setInitLawyers:(state,action)=>{
@@ -12,9 +12,12 @@ const AdminPanelSlice=createSlice({
         setSelectedLawyers:(state,action)=>{
             state.selectedLawyer=action.payload;
         },
+        updatedUser:(state)=>{
+            state.selectedLawyer=0;
+        }
         
     }
 })
 
-export const {setInitLawyers,setSelectedLawyers}=AdminPanelSlice.actions;
+export const {setInitLawyers,setSelectedLawyers,updatedUser}=AdminPanelSlice.actions;
 export default AdminPanelSlice.reducer
