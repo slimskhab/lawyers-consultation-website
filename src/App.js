@@ -8,6 +8,7 @@ import Signup from './view/pages/signup/Signup';
 import Login from './view/pages/login/Login';
 import Message from './view/pages/message/Message';
 import Lawyers from './view/pages/lawyers/Lawyers';
+import AdminPanel from './view/pages/adminPanel/AdminPanel';
 function App() {
   return (
     <div className="App">
@@ -20,6 +21,7 @@ function App() {
   <Route path= "/login" element ={<Login/>}  />
   <Route path= "/messages" element ={<Message/>}  />
   <Route path= "/lawyers" element ={<Lawyers/>}  />
+  <Route path= "/admin-panel" element ={<AdminPanel/>}  />
 
 </Routes>
     
