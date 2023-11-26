@@ -32,7 +32,7 @@ font-weight: 600;
 height: 200px;
 flex-shrink: 0;
 border-radius: 200px;
-border: 1px solid #001F3F;
+border: 1px solid var(--main-color);
 background: rgba(0, 31, 63, 0.06);
 display: flex;
 align-items: center;
@@ -41,15 +41,18 @@ justify-content: center;
 
 .input-box{
     border-radius: 63px;
-border: 1px solid #001F3F;
+border: 1px solid var(--main-color);
 background: rgba(0, 31, 63, 0.06);
 height: 65px;
 width: 100%;
+display: flex;
+flex-direction: column;
 }
 
 .input-style{
     padding-left: 15px;
     color:var(--main-color);
+    background-color: transparent;
 }
 
 .submit-button{
@@ -151,6 +154,7 @@ cursor: pointer;
 .error-message{
     color: red;
     font-weight: bold;
+    text-align: start;
 }
 .isnotselected-button{
     border: var(--main-color) 1px solid;
