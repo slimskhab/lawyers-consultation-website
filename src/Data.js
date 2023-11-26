@@ -9,7 +9,7 @@ export const userData=[
 
 
 export const donationData=[
-    {id:0,name:"slim",img:"/user.png",sum:2000},
+    {id:0,name:"chaima",img:"/user.png",sum:2000},
     {id:0,name:"slim",img:"/user.png",sum:2000},
     {id:0,name:"slim",img:"/user.png",sum:2000},
     {id:0,name:"slim",img:"/user.png",sum:2000},

@@ -12,6 +12,8 @@ import InPageNavReducer from './features/InPageNav';
 import ScrollToTop from './Helpers';
 import authentificateReducer from './features/Authentification';
 import messageReducer from "./features/Message";
+import adminPanelReducer from "./features/AdminPanel";
+
 import { ChakraProvider } from '@chakra-ui/react'
 
 const store = configureStore({
@@ -19,7 +21,8 @@ const store = configureStore({
     searchStore: searchReducer,
     pageNavStore: InPageNavReducer,
     authentificateStore: authentificateReducer,
-    messageStore: messageReducer
+    messageStore: messageReducer,
+    adminPanelStore:adminPanelReducer,
   }
 })
 
