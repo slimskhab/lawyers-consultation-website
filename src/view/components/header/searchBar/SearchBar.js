@@ -13,6 +13,8 @@ function SearchBar(props) {
 useEffect(()=>{
 axios.get("http://localhost:6005/lawyer").then((res)=>{
     dispatch(setList(res.data.lawyers))
+}).catch((e)=>{
+    console.log(e)
 })
 },[])
 const navigate=useNavigate();
