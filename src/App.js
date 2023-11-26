@@ -8,6 +8,7 @@ import Signup from './view/pages/signup/Signup';
 import Login from './view/pages/login/Login';
 import Message from './view/pages/message/Message';
 import Lawyers from './view/pages/lawyers/Lawyers';
+import MyProfile from './view/pages/myProfile/MyProfile';
 function App() {
   return (
     <div className="App">
@@ -16,6 +17,7 @@ function App() {
   <Route path= "/" element ={<HomePage/>}  />
   <Route path= "/lawyer/:id" element ={<Profile/>}  />
   <Route path= "/signup" element ={<Signup/>}  />
+  <Route path= "/my-account" element ={<MyProfile/>}  />
 
   <Route path= "/login" element ={<Login/>}  />
   <Route path= "/messages" element ={<Message/>}  />

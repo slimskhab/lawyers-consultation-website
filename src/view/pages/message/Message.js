@@ -16,7 +16,7 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { useToast } from '@chakra-ui/react';
-
+import {useNavigate} from "react-router-dom"
 const ENDPOINT = "http://localhost:6005"
 var socket;
 function Message(props) {
@@ -25,13 +25,15 @@ function Message(props) {
     const selectedChat = useSelector((state) => state.messageStore.selectedChat)
     const messages = useSelector((state) => state.messageStore.messages)
     const isLawyer = useSelector((state) => state.authentificateStore.isLawyer)
+    const isLoggedIn = useSelector((state) => state.authentificateStore.isLoggedIn);
+    const navigate=useNavigate()
     const dispatch = useDispatch();
     const inputRef = useRef();
     const [isLoading, setIsLoading] = useState(false);
     const [typing, setTyping] = useState(false);
     const [otherUserId, setOtherUserId] = useState();
     const [otherUser, setOtherUser] = useState();
-const toast=useToast();
+    const toast=useToast();
     const [isTyping, setIsTyping] = useState(false);
     const [messageContent, setMessageContent] = useState("");
     const [startDate, setStartDate] = useState(new Date());
@@ -39,6 +41,8 @@ const toast=useToast();
     const [nextDate, setNextDate] = useState(new Date());
     const feeRef = useRef();
     const signatureRef = useRef();
+
+
     const defaultOptions = {
         loop: true,
         autoplay: true,
@@ -47,6 +51,14 @@ const toast=useToast();
             preserveAspectRatio: "xMidYMid slice",
         },
     };
+ 
+    useEffect(() => {
+
+        if (!isLoggedIn) {
+            navigate('/login');
+        }
+    }, [isLoggedIn]);
+
     useEffect(() => {
         socket = io(ENDPOINT);
         socket.emit("setup", user);

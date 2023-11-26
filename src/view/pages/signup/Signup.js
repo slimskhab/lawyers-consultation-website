@@ -25,8 +25,8 @@ function Signup(props) {
     const [pic, setPic] = useState();
     const toast = useToast();
     const navigate = useNavigate();
+    const [value, setValue] = React.useState('Trainee')
     const isLoggedIn = useSelector((state) => state.authentificateStore.isLoggedIn);
-    const [value, setValue] = React.useState('1')
 
     useEffect(() => {
 
@@ -81,10 +81,10 @@ function Signup(props) {
                     password: passwordRef.current.value,
                     email: emailRef.current.value,
                     bio: bioRef.current.value,
-                    profilePic:pic
+                    profilePic:pic,
+                    category:value
                 }
                 axios.post("http://localhost:6005/lawyer/signup", requestData).then((response) => {
-                    console.log(response.data);
                     dispatch(authentificateLawyer(response.data.lawyer))
 
                     navigate('/');
@@ -285,9 +285,9 @@ pic?<img src={pic} className='profile-image-container'></img>:
                         </h2>
                         <RadioGroup onChange={setValue} value={value}>
       <Stack direction='row' className='radio-buttons'>
-        <Radio value='1'>تمرين</Radio>
-        <Radio value='2'>تعقيب</Radio>
-        <Radio value='3'>إستئناف</Radio>
+        <Radio value='Trainee'>Trainee Lawyer</Radio>
+        <Radio value='Litigation'>Litigation Lawyer</Radio>
+        <Radio value='Appeal'>Appeal Lawyer</Radio>
       </Stack>
     </RadioGroup>
                     </div>
