@@ -41,7 +41,13 @@ function Login(props) {
 
             }).catch((e) => {
                 if (e.response.status === 401) {
-                    setLoginError('Email or password are wrong');
+                    if(e.response.data.status==="veriffail"){
+                        setLoginError('Account not verrified yet');
+
+                    }else{
+                        setLoginError('Email or password are wrong');
+
+                    }
                 }
                 console.log(e);
             })

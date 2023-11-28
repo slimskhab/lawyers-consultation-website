@@ -82,7 +82,7 @@ export default function AdminPanel() {
                 <span>Email: {selectedLawyer.email}</span>
                 <span>Bio: {selectedLawyer.bio}</span>
                 <span>Category: {selectedLawyer.category}</span>
-                <img src={selectedLawyer.certifImage}></img>
+                <img src={selectedLawyer.certifPic}></img>
                 <div>
                 <Button colorScheme='teal' size='md' onClick={handleApproveButton}>
                   Approve
