@@ -16,7 +16,7 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { useToast } from '@chakra-ui/react';
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 const ENDPOINT = "http://localhost:6005"
 var socket;
 function Message(props) {
@@ -26,14 +26,14 @@ function Message(props) {
     const messages = useSelector((state) => state.messageStore.messages)
     const isLawyer = useSelector((state) => state.authentificateStore.isLawyer)
     const isLoggedIn = useSelector((state) => state.authentificateStore.isLoggedIn);
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     const dispatch = useDispatch();
     const inputRef = useRef();
     const [isLoading, setIsLoading] = useState(false);
     const [typing, setTyping] = useState(false);
     const [otherUserId, setOtherUserId] = useState();
     const [otherUser, setOtherUser] = useState();
-    const toast=useToast();
+    const toast = useToast();
     const [isTyping, setIsTyping] = useState(false);
     const [messageContent, setMessageContent] = useState("");
     const [startDate, setStartDate] = useState(new Date());
@@ -51,7 +51,7 @@ function Message(props) {
             preserveAspectRatio: "xMidYMid slice",
         },
     };
- 
+
     useEffect(() => {
 
         if (!isLoggedIn) {
@@ -77,9 +77,9 @@ function Message(props) {
             setIsTyping(false)
         })
 
-        
 
-        
+
+
         return () => {
             socket.off("message received", handleMessageReceived);
         };
@@ -147,14 +147,14 @@ function Message(props) {
                         {chats &&
                             chats.map((e, index) => {
                                 return <div className='chat-container' onClick={() => {
-                                    var id=e.users.find(userId => userId !== user.id)
+                                    var id = e.users.find(userId => userId !== user.id)
                                     setOtherUserId(id);
-                                    
-                                    if(!isLawyer){
-                                        axios.get(`http://localhost:6005/lawyer/${id}`).then((res)=>{
+
+                                    if (!isLawyer) {
+                                        axios.get(`http://localhost:6005/lawyer/${id}`).then((res) => {
                                             setOtherUser(res.data.lawyer);
-                                            
-                                        }).catch((e)=>{
+
+                                        }).catch((e) => {
                                             console.log(e);
                                         })
                                     }
@@ -189,16 +189,22 @@ function Message(props) {
                                                 <div className='online-dot'></div>
                                             </div>
                                             {
-                                                isLawyer && <div className='send-contract-button' onClick={handleContract}>
+                                                isLawyer &&<div className='d-flex'>
+                                                    <div className='send-contract-button' onClick={handleContract} style={{marginRight:10}}>
+                                                    Finish contract
+                                                </div>
+                                                     <div className='send-contract-button' onClick={handleContract}>
                                                     Send contract
                                                 </div>
+                                                </div>
                                             }
+                                            
 
 
                                         </div>
                                         <ScrollableFeed className='scroll'>
                                             {messages &&
-                                                messages.map((e, index,array) => {
+                                                messages.map((e, index, array) => {
 
                                                     if (e.senderId === user.id) {
                                                         if (e.isContract) {
@@ -263,7 +269,7 @@ function Message(props) {
                                                                                             duration: 5000,
                                                                                             isClosable: true,
                                                                                             position: "bottom",
-                                                                                          });
+                                                                                        });
                                                                                     }).catch((e) => {
                                                                                         console.log(e);
                                                                                     })
@@ -274,7 +280,7 @@ function Message(props) {
                                                                                         duration: 5000,
                                                                                         isClosable: true,
                                                                                         position: "bottom",
-                                                                                      });
+                                                                                    });
                                                                                 }
 
 
@@ -408,17 +414,17 @@ function Message(props) {
                                                                                         messageId: e.id,
                                                                                         contractStatus: 2
                                                                                     }).then((response) => {
-                                                                                        socket.emit("new message",{...response.data.message,senderId:user.id});
+                                                                                        socket.emit("new message", { ...response.data.message, senderId: user.id });
                                                                                         dispatch(removeMessage(e.id))
-                                                                                        
-                                                                                      dispatch(sendMessage(response.data.message))
-                                                                                      toast({
-                                                                                        title: "Accepted contract!",
-                                                                                        status: "success",
-                                                                                        duration: 5000,
-                                                                                        isClosable: true,
-                                                                                        position: "bottom",
-                                                                                      });
+
+                                                                                        dispatch(sendMessage(response.data.message))
+                                                                                        toast({
+                                                                                            title: "Accepted contract!",
+                                                                                            status: "success",
+                                                                                            duration: 5000,
+                                                                                            isClosable: true,
+                                                                                            position: "bottom",
+                                                                                        });
                                                                                     }).catch((e) => {
                                                                                         console.log(e);
                                                                                     })
@@ -429,7 +435,7 @@ function Message(props) {
                                                                                         duration: 5000,
                                                                                         isClosable: true,
                                                                                         position: "bottom",
-                                                                                      });
+                                                                                    });
                                                                                 }
 
 
@@ -480,24 +486,28 @@ function Message(props) {
                                                             }
 
                                                         } else {
-                                                            
-                                                            return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", justifyContent: "start",alignItems:"center" }}>
-                                                               {
-                                                                array[index + 1]?
-                                                                
-                                                                array[index + 1].senderId===user.id?
-                                                               // otherUser&&
-                                                                !isLawyer&& <img src={otherUser.profilePic?otherUser.profilePic:"./user.png"} style={{height:40,width:40,borderRadius:40,marginRight:10}}>
 
-                                                                </img>:<div style={{width:50}}></div>
-                                                                : 
-                                                                //otherUser&&
-                                                                !isLawyer&& <img src={otherUser.profilePic?otherUser.profilePic:"./user.png"} style={{height:40,width:40,borderRadius:40,marginRight:10}}>
+                                                            return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", justifyContent: "start", alignItems: "center" }}>
+                                                                {
 
-                                                                </img>
-                                                               }
+
+                                                                    array[index + 1] ?
+
+                                                                        array[index + 1].senderId === user.id ?
+
+                                                                            !isLawyer && <img src={otherUser?.profilePic || "./user.png"}
+                                                                                style={{ height: 40, width: 40, borderRadius: 40, marginRight: 10 }}>
+
+                                                                            </img> : (!isLawyer) ? <div style={{ width: 50 }}></div> : <div></div>
+                                                                        :
+
+                                                                        !isLawyer && <img src={otherUser?.profilePic || "./user.png"}
+                                                                            style={{ height: 40, width: 40, borderRadius: 40, marginRight: 10 }}>
+
+                                                                        </img>
+                                                                }
                                                                 <div className='received-message'>
-                                                                    {e.content}
+                                                                    {e.content}{isLawyer}
                                                                 </div>
                                                             </div>)
                                                         }

@@ -73,8 +73,8 @@ function Login(props) {
 
     const handleTest = () => {
         if (isSelected) {
-            emailRef.current.value = "slim@gmail.com";
-            passwordRef.current.value = "123123123"
+            emailRef.current.value = "john@gmail.com";
+            passwordRef.current.value = "123"
 
         } else {
             emailRef.current.value = "chaima@gmail.com";

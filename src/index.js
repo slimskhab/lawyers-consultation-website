@@ -13,7 +13,7 @@ import ScrollToTop from './Helpers';
 import authentificateReducer from './features/Authentification';
 import messageReducer from "./features/Message";
 import adminPanelReducer from "./features/AdminPanel";
-
+import methodsReducer from "./features/PaymentMethods"
 import { ChakraProvider } from '@chakra-ui/react'
 
 const store = configureStore({
@@ -23,6 +23,7 @@ const store = configureStore({
     authentificateStore: authentificateReducer,
     messageStore: messageReducer,
     adminPanelStore:adminPanelReducer,
+    methodsStore:methodsReducer
   }
 })
 
