@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightFromBracket,faUser } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../../features/Authentification';
+import { messageLogout } from '../../../../features/Message';
 function NavigationBar(props) {
     const navigate=useNavigate();
     const dispatch=useDispatch();
@@ -24,6 +25,7 @@ function NavigationBar(props) {
             }}/>
             <FontAwesomeIcon style={{ color: 'white', fontSize: '30px',cursor:"pointer" }} icon={faRightFromBracket} onClick={()=>{
     dispatch(logout());
+    dispatch(messageLogout())
     navigate("/")
 }}/>
             </div>

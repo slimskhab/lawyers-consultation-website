@@ -4,7 +4,7 @@ import SmallNavBar from '../../components/smallnavigationbar/SmallNavBar';
 import Footer from '../../components/footer/Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { initializeChats, initializeMessages, removeMessage, selectChat, sendMessage } from '../../../features/Message';
+import { initContracts, initThisContract, initializeChats, initializeMessages, removeMessage, selectChat, sendMessage } from '../../../features/Message';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Spinner from 'react-bootstrap/Spinner';
 import Lottie from 'react-lottie';
@@ -15,7 +15,7 @@ import ScrollableFeed from 'react-scrollable-feed';
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { useToast } from '@chakra-ui/react';
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Select, useDisclosure, useToast } from '@chakra-ui/react';
 import { useNavigate } from "react-router-dom"
 const ENDPOINT = "http://localhost:6005"
 var socket;
@@ -26,6 +26,9 @@ function Message(props) {
     const messages = useSelector((state) => state.messageStore.messages)
     const isLawyer = useSelector((state) => state.authentificateStore.isLawyer)
     const isLoggedIn = useSelector((state) => state.authentificateStore.isLoggedIn);
+    const contracts = useSelector((state) => state.messageStore.contracts);
+    const contract = useSelector((state) => state.messageStore.thisContract);
+
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const inputRef = useRef();
@@ -39,9 +42,11 @@ function Message(props) {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [nextDate, setNextDate] = useState(new Date());
+
     const feeRef = useRef();
     const signatureRef = useRef();
 
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     const defaultOptions = {
         loop: true,
@@ -86,7 +91,12 @@ function Message(props) {
     }, [])
 
 
-
+    function formatDate(isoDate) {
+        const date = new Date(isoDate);
+        const formattedDate = date.toLocaleDateString(); // Format date as 'MM/DD/YYYY'
+        const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format time as 'HH:MM'
+        return `${formattedDate} ${formattedTime}`;
+    }
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -133,6 +143,30 @@ function Message(props) {
         axios.post("http://localhost:6005/message/send", messageData).then((response) => {
             socket.emit("new message", response.data.message)
             dispatch(sendMessage(response.data.message));
+            onClose();
+        }).catch((e) => {
+            console.log(e);
+        })
+    }
+
+    const handleContractFinish = () => {
+        var requestData={
+            messageId:contract.id,
+            contractStatus:3
+        }
+        axios.post("http://localhost:6005/message/update", requestData).then((response) => {
+            dispatch(removeMessage(contract.id))
+            socket.emit("new message", response.data.message)
+            dispatch(sendMessage(response.data.message));
+            inputRef.current.value = "";
+            onClose();
+            toast({
+                title: "Sent finish contract request!",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom",
+            });
         }).catch((e) => {
             console.log(e);
         })
@@ -159,6 +193,10 @@ function Message(props) {
                                         })
                                     }
                                     dispatch(selectChat(e));
+
+                                    axios.get(`http://localhost:6005/message/contract/${selectedChat.id}`).then((res) => {
+                                        dispatch(initContracts(res.data.contracts))
+                                    })
                                     setIsLoading(true);
 
                                     axios.get(`http://localhost:6005/message/${e.id}`).then((response) => {
@@ -189,16 +227,25 @@ function Message(props) {
                                                 <div className='online-dot'></div>
                                             </div>
                                             {
-                                                isLawyer &&<div className='d-flex'>
-                                                    <div className='send-contract-button' onClick={handleContract} style={{marginRight:10}}>
-                                                    Finish contract
-                                                </div>
-                                                     <div className='send-contract-button' onClick={handleContract}>
-                                                    Send contract
-                                                </div>
+                                                isLawyer && <div className='d-flex'>
+                                                    {
+                                                        contracts.length >= 1 && <Button colorScheme='green' onClick={()=>{
+                                                            axios.get(`http://localhost:6005/message/contract/${selectedChat.id}`).then((res) => {
+                                        dispatch(initContracts(res.data.contracts));
+                                        onOpen()
+
+                                    })
+                                                        }} style={{ marginRight: 10 }}>
+                                                            Finish contract
+                                                        </Button>
+                                                    }
+
+                                                    <Button colorScheme='green' onClick={handleContract}>
+                                                        Send contract
+                                                    </Button>
                                                 </div>
                                             }
-                                            
+
 
 
                                         </div>
@@ -217,11 +264,10 @@ function Message(props) {
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
                                                                                     <span style={{ textAlign: "start" }}>Fee</span>
                                                                                     <input className='contract-input' ref={feeRef}></input>
-
                                                                                 </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
                                                                                     <span style={{ textAlign: "start" }}>Start date</span>
-                                                                                    <div style={{ borderRadius: 20, background: "red" }}>
+                                                                                    <div style={{ borderRadius: 10, }}>
                                                                                         <DatePicker selected={startDate} onChange={(date) => {
 
                                                                                             var tomorrow = new Date();
@@ -247,7 +293,7 @@ function Message(props) {
 
                                                                         </div>
                                                                         <div style={{ display: "flex", justifyContent: "end" }}>
-                                                                            <div style={{ background: "white", borderRadius: "10px", width: "min-content", color: "green", padding: "5px 20px 5px 20px", margin: 10, cursor: "pointer" }} onClick={() => {
+                                                                            <Button colorScheme='teal' variant='outline' onClick={() => {
                                                                                 var fullName = `${user.firstName} ${user.lastName}`;
                                                                                 if (signatureRef.current.value === fullName) {
                                                                                     var requestData = {
@@ -286,7 +332,7 @@ function Message(props) {
 
                                                                             }}>
                                                                                 Submit
-                                                                            </div>
+                                                                            </Button>
                                                                         </div>
 
 
@@ -300,20 +346,19 @@ function Message(props) {
                                                                         <div className='d-flex' style={{ justifyContent: "space-between", }}>
 
                                                                             <div>
+                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Contract Id: #{e.id}</span>
+                                                                                </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>Fee</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractFee}</span>
+                                                                                    <span style={{ textAlign: "start" }}>Fee: {e.contractFee}</span>
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Start date: {formatDate(e.contractStartDate)}</span>
+
 
                                                                                 </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>Start date</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractStartDate}</span>
-
-
-                                                                                </div>
-                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>End Date</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractEndDate}</span>
+                                                                                    <span style={{ textAlign: "start" }}>End Date: {formatDate(e.contractEndDate)}</span>
 
                                                                                 </div>
                                                                             </div>
@@ -365,8 +410,73 @@ function Message(props) {
                                                                     </div>
 
                                                                 </div>);
-                                                            }
-                                                        }
+                                                            }else if(e.contractStatus===3){
+                                                                return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", flexDirection: "column", alignItems: "end", justifyContent: "end" }}>
+                                                                    <div className='contract-block' style={{border:"2px red solid"}}>
+                                                                        <div className='d-flex' style={{ justifyContent: "space-between", }}>
+
+                                                                            <div>
+                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Fee: {e.contractFee}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Start date: {formatDate(e.contractStartDate)}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>End Date: {formatDate(e.contractEndDate)}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                <span style={{ textAlign: "start" }}>Waiting for client approval to finish contract</span>
+                                                                            </div>
+                                                                        </div>
+
+
+
+
+                                                                    </div>
+
+                                                                </div>);
+                                                            }else if(e.contractStatus===4){
+                                                                return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", flexDirection: "column", alignItems: "end", justifyContent: "end" }}>
+                                                                    <div className='contract-block' style={{border:"2px red solid"}}>
+                                                                        <div className='d-flex' style={{ justifyContent: "space-between", }}>
+
+                                                                            <div>
+                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Fee: {e.contractFee}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Start date: {formatDate(e.contractStartDate)}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>End Date: {formatDate(e.contractEndDate)}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                <span style={{ textAlign: "start" }}>Contract Finished</span>
+                                                                            </div>
+                                                                        </div>
+
+
+
+
+                                                                    </div>
+
+                                                                </div>);
+                                                            }                                                        }
                                                         else {
                                                             return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", justifyContent: "end" }}>
                                                                 <div className='sent-message'>
@@ -383,19 +493,20 @@ function Message(props) {
                                                                         <div className='d-flex' style={{ justifyContent: "space-between", paddingTop: "10px" }}>
 
                                                                             <div>
+                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
+                                                                                </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>Fee</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractFee} TND</span>
+                                                                                    <span style={{ textAlign: "start" }}>Fee: {e.contractFee} TND</span>
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Start date: {formatDate(e.contractStartDate)}</span>
+                                                                                
 
                                                                                 </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>Start date</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractStartDate}</span>
-
-                                                                                </div>
-                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>End Date</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractEndDate}</span>
+                                                                                    <span style={{ textAlign: "start" }}>End Date: {formatDate(e.contractEndDate)}</span>
+                                                                                    <span style={{ textAlign: "start" }}></span>
 
                                                                                 </div>
                                                                             </div>
@@ -407,27 +518,54 @@ function Message(props) {
 
                                                                         </div>
                                                                         <div style={{ display: "flex", justifyContent: "end" }}>
-                                                                            <div style={{ background: "white", borderRadius: "10px", width: "min-content", color: "green", padding: "5px 20px 5px 20px", margin: 10, cursor: "pointer" }} onClick={() => {
+                                                                            <Button colorScheme='teal' variant='outline' onClick={() => {
                                                                                 var fullName = `${user.firstName} ${user.lastName}`;
+                                                                                console.log(fullName);
                                                                                 if (signatureRef.current.value === fullName) {
-                                                                                    axios.post("http://localhost:6005/message/update", {
-                                                                                        messageId: e.id,
-                                                                                        contractStatus: 2
-                                                                                    }).then((response) => {
-                                                                                        socket.emit("new message", { ...response.data.message, senderId: user.id });
-                                                                                        dispatch(removeMessage(e.id))
-
-                                                                                        dispatch(sendMessage(response.data.message))
-                                                                                        toast({
-                                                                                            title: "Accepted contract!",
-                                                                                            status: "success",
-                                                                                            duration: 5000,
-                                                                                            isClosable: true,
-                                                                                            position: "bottom",
-                                                                                        });
-                                                                                    }).catch((e) => {
-                                                                                        console.log(e);
+                                                                                    axios.get(`http://localhost:6005/client/find/${user.id}`).then((res)=>{
+                                                                                        if (res.data.client.funds>=e.contractFee){
+                                                                                            axios.put("http://localhost:6005/client/update",{
+                                                                                                userId:user.id,
+                                                                                                funds:res.data.client.funds-e.contractFee
+                                                                                            }).then((res)=>{
+                                                                                                toast({
+                                                                                                    title: "removed funds!",
+                                                                                                    status: "success",
+                                                                                                    duration: 5000,
+                                                                                                    isClosable: true,
+                                                                                                    position: "bottom",
+                                                                                                });
+                                                                                                axios.post("http://localhost:6005/message/update", {
+                                                                                                messageId: e.id,
+                                                                                                contractStatus: 2
+                                                                                            }).then((response) => {
+                                                                                                socket.emit("new message", { ...response.data.message, senderId: user.id });
+                                                                                                dispatch(removeMessage(e.id))
+        
+                                                                                                dispatch(sendMessage(response.data.message))
+                                                                                                toast({
+                                                                                                    title: "Accepted contract!",
+                                                                                                    status: "success",
+                                                                                                    duration: 5000,
+                                                                                                    isClosable: true,
+                                                                                                    position: "bottom",
+                                                                                                });
+                                                                                            }).catch((e) => {
+                                                                                                console.log(e);
+                                                                                            })
+                                                                                            })
+                                                                                            
+                                                                                        }else{
+                                                                                            toast({
+                                                                                                title: "Not enough funds!",
+                                                                                                status: "error",
+                                                                                                duration: 5000,
+                                                                                                isClosable: true,
+                                                                                                position: "bottom",
+                                                                                            });
+                                                                                        }
                                                                                     })
+                                                                                    
                                                                                 } else {
                                                                                     toast({
                                                                                         title: "Wrong signature!",
@@ -441,7 +579,7 @@ function Message(props) {
 
                                                                             }}>
                                                                                 Accept
-                                                                            </div>
+                                                                            </Button>
                                                                         </div>
 
 
@@ -455,19 +593,20 @@ function Message(props) {
                                                                         <div className='d-flex' style={{ justifyContent: "space-between", paddingTop: "10px" }}>
 
                                                                             <div>
-                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>Fee</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractFee} TND</span>
+                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
 
                                                                                 </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>Start date</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractStartDate}</span>
+                                                                                    <span style={{ textAlign: "start" }}>Fee: {e.contractFee} TND</span>
 
                                                                                 </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>End Date</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractEndDate}</span>
+                                                                                    <span style={{ textAlign: "start" }}>Start date: {formatDate(e.contractStartDate)}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>End Date: {formatDate(e.contractEndDate)}</span>
 
                                                                                 </div>
                                                                             </div>
@@ -475,6 +614,108 @@ function Message(props) {
                                                                                 <span style={{ textAlign: "start" }}>Accepted By Client</span>
                                                                             </div>
 
+                                                                        </div>
+
+
+
+
+                                                                    </div>
+
+                                                                </div>);
+                                                            }else if(e.contractStatus===3){
+                                                                return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", flexDirection: "column", alignItems: "start", justifyContent: "end" }}>
+                                                                <div className='contract-block' style={{border:"2px red solid"}}>
+                                                                    <div className='d-flex' style={{ justifyContent: "space-between", paddingTop: "10px" }}>
+
+                                                                    <div>
+                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Fee: {e.contractFee}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Start date: {formatDate(e.contractStartDate)}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>End Date: {formatDate(e.contractEndDate)}</span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                    </div>
+                                                                    <div style={{ display: "flex", justifyContent: "end" }}>
+                                                                        <Button colorScheme='red' variant='outline' onClick={() => {
+                                                                            axios.post("http://localhost:6005/message/update", {
+                                                                                messageId: e.id,
+                                                                                contractStatus: 4
+                                                                            }).then((response) => {
+                                                                                socket.emit("new message", { ...response.data.message, senderId: user.id });
+                                                                                dispatch(removeMessage(e.id))
+
+                                                                                dispatch(sendMessage(response.data.message))
+                                                                                console.log("sending fund to user : "+otherUserId);
+                                                                                console.log("sending this funds : "+response.data.message.contractFee);
+                                                                                axios.put(`http://localhost:6005/lawyer/funds/${otherUserId}`,{
+                                                                                    funds:response.data.message.contractFee
+                                                                                }).then((res)=>{
+                                                                                    toast({
+                                                                                        title: "Finished contract!",
+                                                                                        status: "success",
+                                                                                        duration: 5000,
+                                                                                        isClosable: true,
+                                                                                        position: "bottom",
+                                                                                    });
+                                                                                }).catch((e)=>{
+                                                                                    toast({
+                                                                                        title: "Server error!",
+                                                                                        status: "error",
+                                                                                        duration: 5000,
+                                                                                        isClosable: true,
+                                                                                        position: "bottom",
+                                                                                    });
+                                                                                })
+
+                                                                            }).catch((e) => {
+                                                                                console.log(e);
+                                                                            })
+                                                                        }}>
+                                                                            Finish Contract
+                                                                        </Button>
+                                                                    </div>
+
+
+
+                                                                </div>
+
+                                                            </div>);
+                                                            }else if(e.contractStatus===4){
+                                                                return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", flexDirection: "column", alignItems: "end", justifyContent: "end" }}>
+                                                                    <div className='contract-block' style={{border:"2px red solid"}}>
+                                                                        <div className='d-flex' style={{ justifyContent: "space-between", }}>
+
+                                                                            <div>
+                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Fee: {e.contractFee}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Start date: {formatDate(e.contractStartDate)}</span>
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>End Date: {formatDate(e.contractEndDate)}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                <span style={{ textAlign: "start" }}>Contract Finished</span>
+                                                                            </div>
                                                                         </div>
 
 
@@ -589,7 +830,55 @@ function Message(props) {
                     </div>
                 </div>
             </div>
+            <AlertDialog
+                isOpen={isOpen}
+                //leastDestructiveRef={cancelRef}
+                onClose={onClose}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                            Delete Customer
+                        </AlertDialogHeader>
 
+                        <AlertDialogBody>
+                            Choose which contract you want to finish
+                            <Select placeholder='Select contract' onChange={(e) => {
+                                var thisContract = contracts.find((item) => item.id === Number(e.target.value))
+                                dispatch(initThisContract(thisContract))
+                            }}>
+                                {
+                                    contracts.map((e, index) => {
+                                        return <option value={e.id}>Contract ID:{e.id}</option>
+                                    })
+                                }
+
+
+                            </Select>
+                            {
+                                contract!==-1 && <div>
+                                    <h3>Contract ID:{contract.id} </h3>
+                                    <h3>Contract Start Date: {formatDate(contract.contractStartDate)}</h3>
+                                    <h3>Contract End Date: {formatDate(contract.contractEndDate)}</h3>
+                                    <h3>Contract Fee: {contract.contractFee}</h3>
+
+                                </div>
+                            }
+                        </AlertDialogBody>
+
+                        <AlertDialogFooter>
+                            <Button
+                                //ref={cancelRef}
+                                onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button colorScheme='red' onClick={handleContractFinish} ml={3}>
+                                Finish
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
             <Footer />
         </div>
     );

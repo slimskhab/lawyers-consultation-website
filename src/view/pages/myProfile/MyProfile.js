@@ -4,7 +4,7 @@ import Footer from '../../components/footer/Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import "./MyProfile.css"
 import { useState } from 'react';
-import { FormErrorMessage, FormHelperText, Input, FormLabel, FormControl, Radio, RadioGroup, Button } from '@chakra-ui/react';
+import { FormErrorMessage, FormHelperText, Input, FormLabel, FormControl, Radio, RadioGroup, Button, AlertDialogOverlay, AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, useDisclosure } from '@chakra-ui/react';
 import { Stack, Toast } from 'react-bootstrap';
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
@@ -13,7 +13,9 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import CreditCard from '../../components/creditCard/CreditCard';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
-import { addPaymentMethod, addedPaymentMethod, initPayementMethods, removePaymentMethod } from '../../../features/PaymentMethods';
+import { addPaymentMethod, initPayementMethods, removePaymentMethod } from '../../../features/PaymentMethods';
+import { authentificateClient, authentificateLawyer, updateFunds, withdrawFunds } from '../../../features/Authentification';
+import { useRef } from 'react';
 function MyProfile(props) {
     const thisUser = useSelector((state) => state.authentificateStore.user);
     const isLawyer = useSelector((state) => state.authentificateStore.isLawyer);
@@ -22,6 +24,7 @@ function MyProfile(props) {
     const [firstName, setFirstName] = useState(thisUser.firstName)
     const [lastName, setLastName] = useState(thisUser.lastName)
     const [value, setValue] = useState(thisUser.category);
+    
     const [switchWindow, setSwitchWindow] = React.useState(false);
     const handleInputChange = (e) => setEmail(e.target.value);
     const isError = email === ''
@@ -36,21 +39,19 @@ const methods=useSelector((state)=>state.methodsStore.paymentMethods);
     const [cardTopColor, setCardTopColor] = useState("grey");
     const [cardBottomColor, setCardBottomColor] = useState("greydark");
 
-
-const toast=useToast();
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const withdrawRef=useRef();
+    const toast=useToast();
     const navigate = useNavigate()
-const dispatch=useDispatch();
-
+    const dispatch=useDispatch();
 
     useEffect(() => {
-
         if (!isLoggedIn) {
             navigate('/login');
         }
     }, [isLoggedIn]);
 
     useEffect(() => {
-
         axios.get(`http://localhost:6005/paymentmethod/${thisUser.id}`).then((res)=>{
             dispatch(initPayementMethods(res.data.methods))
         }).catch((e)=>{
@@ -63,6 +64,18 @@ const dispatch=useDispatch();
               });
         })
     }, []);
+
+    useEffect(()=>{
+        if(isLawyer){
+            axios.get(`http://localhost:6005/lawyer/${thisUser.id}`).then((res)=>{
+                dispatch(authentificateLawyer(res.data.lawyer))
+            })
+        }else{
+            axios.get(`http://localhost:6005/client/find/${thisUser.id}`).then((res)=>{
+                dispatch(authentificateClient(res.data.client))
+            })
+        }
+    },[])
 
     const handleCardNumberChange = (e) => {
         const input = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
@@ -91,6 +104,42 @@ const dispatch=useDispatch();
         } else {
             setCardTopColor('grey');
             setCardBottomColor("greydark")
+        }
+    }
+
+    const handleWitdhraw=()=>{
+        var funds=withdrawRef.current.value;
+        if(thisUser.funds<funds){
+            toast({
+                title: "Not enough account balance!",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom",
+              });
+        }else{
+            axios.put("http://localhost:6005/lawyer/withdraw",{
+                userId:thisUser.id,
+                funds:thisUser.funds-funds
+            }).then((res)=>{
+                dispatch(withdrawFunds(funds))
+                toast({
+                    title: "Withdrawn Money!",
+                    status: "success",
+                    duration: 5000,
+                    isClosable: true,
+                    position: "bottom",
+                  });
+                  onClose();
+            }).catch((e)=>{
+                toast({
+                    title: "Server Error!",
+                    status: "error",
+                    duration: 5000,
+                    isClosable: true,
+                    position: "bottom",
+                  });
+            })
         }
     }
 
@@ -175,6 +224,9 @@ const dispatch=useDispatch();
                             {thisUser.category ? thisUser.category : "No Category"}
                         </h2>
                         }
+                        <h2>
+                            {thisUser.funds} TND
+                        </h2>
                     </div>
                 </div>
             </div>
@@ -382,6 +434,23 @@ const dispatch=useDispatch();
                                         <span className='credit-card-details'>
                                             {e.holderName}
                                         </span>
+                                        <div>
+                                        {
+                                            isLawyer?<Button colorScheme='green' style={{marginRight:10}} onClick={onOpen}>Withdraw Money</Button>:<Button colorScheme='green' style={{marginRight:10}} onClick={()=>{
+                                                axios.put(`http://localhost:6005/client/funds/${thisUser.id}`,{
+                                                    funds:200
+                                                }).then((res)=>{
+                                                    dispatch(updateFunds(200))
+                                                    toast({
+                                                        title: "Added 200 TND!",
+                                                        status: "success",
+                                                        duration: 5000,
+                                                        isClosable: true,
+                                                        position: "bottom",
+                                                      });
+                                                })
+                                            }}>Add Funds</Button>
+                                        }
                                         <Button colorScheme='red' onClick={()=>{
                                             axios.delete(`http://localhost:6005/paymentmethod/delete/${e.id}`).then((res)=>{
                                                 toast({
@@ -394,6 +463,7 @@ const dispatch=useDispatch();
                                                 dispatch(removePaymentMethod(e.id))
                                             })
                                         }}>Remove</Button>
+                                            </div>
 
                                     </div>
                                     })}
@@ -408,6 +478,39 @@ const dispatch=useDispatch();
 
 
             </div>
+            <AlertDialog
+                isOpen={isOpen}
+                //leastDestructiveRef={cancelRef}
+                onClose={onClose}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                            Withdraw
+                        </AlertDialogHeader>
+
+                        <AlertDialogBody>
+                            How much you want to withdraw?
+                            <Input ref={withdrawRef}
+    isInvalid
+    errorBorderColor='red.300'
+    placeholder='Amount'
+  />
+                        </AlertDialogBody>
+
+                        <AlertDialogFooter>
+                            <Button
+                                //ref={cancelRef}
+                                onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button colorScheme='red' onClick={handleWitdhraw} ml={3}>
+                                Finish
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
             <Footer />
         </div>
     );

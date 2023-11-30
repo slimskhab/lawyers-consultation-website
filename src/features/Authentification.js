@@ -22,9 +22,15 @@ const authentificationSlice=createSlice({
         logout:(state,action)=>{
             state.isLoggedIn=false;
             state.user={}
+        },
+        updateFunds:(state,action)=>{
+            state.user.funds=state.user.funds+action.payload
+        },
+        withdrawFunds:(state,action)=>{
+            state.user.funds=state.user.funds-action.payload
         }
     }
 })
 
-export const {authentificateClient,authentificateLawyer,logout}=authentificationSlice.actions;
+export const {authentificateClient,authentificateLawyer,logout,updateFunds,withdrawFunds}=authentificationSlice.actions;
 export default authentificationSlice.reducer

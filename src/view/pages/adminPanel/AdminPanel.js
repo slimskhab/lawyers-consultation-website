@@ -1,19 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import "./adminPanel.css"
 import SmallNavBar from '../../components/smallnavigationbar/SmallNavBar'
 import Footer from '../../components/footer/Footer'
-import { Button, Card, CardBody, Heading, Image, Stack, Text } from '@chakra-ui/react'
+import { Button, Card, CardBody, Heading, Image, Stack, Text, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { setInitLawyers, setSelectedLawyers, updatedUser } from '../../../features/AdminPanel'
 export default function AdminPanel() {
   const lawyers = useSelector((state) => state.adminPanelStore.lawyers)
   const selectedLawyer = useSelector((state) => state.adminPanelStore.selectedLawyer)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const toast=useToast()
   useEffect(() => {
     axios.get("http://localhost:6005/lawyer/notverrified").then((response) => {
       dispatch(setInitLawyers(response.data.lawyers))
-    })
+    }).catch((e)=>{
+      toast({
+          title: "Server Error Search!",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+  })
 
   }, [])
 
@@ -21,7 +30,15 @@ export default function AdminPanel() {
   const handleApproveButton=() => {
     axios.put(`http://localhost:6005/lawyer/update/${selectedLawyer.id}`, {
       "status": 1
-    })
+    }).catch((e)=>{
+      toast({
+          title: "Server Error Search!",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+  })
     dispatch(updatedUser())
 
   }
@@ -29,7 +46,15 @@ export default function AdminPanel() {
   const handleDisapproveButton=() => {
     axios.put(`http://localhost:6005/lawyer/update/${selectedLawyer.id}`, {
       "status": -1
-    })
+    }).catch((e)=>{
+      toast({
+          title: "Server Error Search!",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+  })
     dispatch(updatedUser())
 
   }
@@ -76,13 +101,13 @@ export default function AdminPanel() {
           {
             selectedLawyer === 0 ?
               <span>please select an account</span> : <div style={{ display: "flex", flexDirection: "column",alignItems:"center" }}>
-                <img src={selectedLawyer.profilePic} style={{height:200,width:200}}></img>
+                <img src={selectedLawyer.profilePic} style={{height:200,width:200}} alt={selectedLawyer.firstName}></img>
                 <span>Fisrt Name: {selectedLawyer.firstName}</span>
                 <span>Last Name: {selectedLawyer.lastName}</span>
                 <span>Email: {selectedLawyer.email}</span>
                 <span>Bio: {selectedLawyer.bio}</span>
                 <span>Category: {selectedLawyer.category}</span>
-                <img src={selectedLawyer.certifPic}></img>
+                <img src={selectedLawyer.certifPic} alt={selectedLawyer.lastName}></img>
                 <div>
                 <Button colorScheme='teal' size='md' onClick={handleApproveButton}>
                   Approve

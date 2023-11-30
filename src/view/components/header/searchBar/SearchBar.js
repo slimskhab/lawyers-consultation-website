@@ -5,16 +5,23 @@ import "./SearchBar.css"
 import { useEffect } from 'react';
 import axios from 'axios';
 import {useNavigate} from "react-router-dom"
+import { useToast } from '@chakra-ui/toast';
 function SearchBar(props) {
     const searchResult = useSelector((state) => state.searchStore.filteredList);
     const dispatch = useDispatch();
     const [searchText, setSearchText] = useState("");
-
+const toast=useToast()
 useEffect(()=>{
 axios.get("http://localhost:6005/lawyer").then((res)=>{
     dispatch(setList(res.data.lawyers))
 }).catch((e)=>{
-    console.log(e)
+    toast({
+        title: "Server Error Search!",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
 })
 },[])
 const navigate=useNavigate();
@@ -59,10 +66,10 @@ const navigate=useNavigate();
 
                             {
                                 searchResult.map((e, index) => {
-                                    return (<a className='data-item' onClick={()=>{
+                                    return (<span className='data-item' onClick={()=>{
                                         dispatch(clearList())
                                         navigate(`/lawyer/${e.id}`)
-                                    }}><p>{e.firstName} {e.lastName}</p></a>)
+                                    }}><p>{e.firstName} {e.lastName}</p></span>)
                                 })
                             }
 

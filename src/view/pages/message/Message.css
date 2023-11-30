@@ -158,17 +158,19 @@ background: var(--main-color);
 
   .contract-block{
     width: 90%;
-    background-color: green;
+    background-color: white;
+    border: 2px green solid;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     padding: 20px;
+    color:black
   }
 
   .contract-input{
     border-radius: 10px;
-    border: none;
+    border: 1px green solid;
 
   }
 
@@ -177,6 +179,6 @@ background: var(--main-color);
   }
 
   .react-datepicker__input-container input{
-    border-radius: 20px;
-border: none;
+    border-radius: 10px;
+border: 1px green solid;
   }

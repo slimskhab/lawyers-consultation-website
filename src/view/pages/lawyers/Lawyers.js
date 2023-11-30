@@ -8,17 +8,28 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import {useNavigate} from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
+import { useToast } from '@chakra-ui/toast';
 function Lawyers(props) {
     const navigate=useNavigate();
     const [lawyers,setLawyers]=useState();
     const [isLoading,setIsLoading]=useState(true);
+    const toast=useToast()
+
     useEffect(()=>{
         setIsLoading(true);
         axios.get("http://localhost:6005/lawyer").then((res)=>{
             
 setLawyers(res.data.lawyers)
 setIsLoading(false);
-        })
+        }).catch((e)=>{
+          toast({
+              title: "Server Error Search!",
+              status: "error",
+              duration: 5000,
+              isClosable: true,
+              position: "bottom",
+            });
+      })
     },[])
 
     return (

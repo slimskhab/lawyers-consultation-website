@@ -3,10 +3,12 @@ import "./MostRated.css"
 import {useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import RatingStars from '../RatingStars';
+import { useToast } from '@chakra-ui/toast';
 function MostRated(props) {
     const navigate = useNavigate();
     const [deviceWidth, setDeviceWidth] = useState(window.innerWidth);
     const [lawyers,setLawyers]=useState();
+    const toast=useToast()
     useEffect(() => {
         const handleResize = () => {
             setDeviceWidth(window.innerWidth);
@@ -29,9 +31,15 @@ function MostRated(props) {
         }).then((response)=>{
             setLawyers(response.data.lawyers)
         }).catch((e)=>{
-            console.log(e);
+            toast({
+                title: "Server Error Search!",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom",
+              });
         })
-    },[lawyers])
+    },[])
 
     return (
         <div className='mostdonated-container'>
@@ -64,9 +72,9 @@ function MostRated(props) {
 
                                 </div>
                             )
-                        }else{
-                            return ;
                         }
+                            return null;
+                        
 
                     })
                 }
@@ -78,7 +86,7 @@ function MostRated(props) {
                             return (
                                 <div className="user-card" key={user.id}>
 
-                                    <img src={user.profilePic} style={{height:250}} alt="name" onClick={() => {
+                                    <img src={user.profilePic} style={{height:250}} alt={user.firstName} onClick={() => {
                                         navigate(`/lawyer/${user.id}`);
                                     }}></img>
                                     <div className='info-card'>
@@ -96,9 +104,9 @@ function MostRated(props) {
 
                                 </div>
                             )
-                        }else{
-                            return ;
                         }
+                            return null;
+                        
 
                     })
                 }
