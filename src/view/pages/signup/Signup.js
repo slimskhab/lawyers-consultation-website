@@ -109,7 +109,7 @@ function Signup(props) {
                     certifPic:certif
                 }
                 axios.post("http://localhost:6005/lawyer/signup", requestData).then((response) => {
-                    dispatch(authentificateLawyer(response.data.lawyer))
+                    //dispatch(authentificateLawyer(response.data.lawyer))
 
                     navigate('/');
                 }).catch((e) => {

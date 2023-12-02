@@ -49,6 +49,8 @@ lawyers.map((e,i)=>{
       <Card.Title>{e.firstName} {e.lastName}</Card.Title>
       <Card.Text>
         {e.category}
+      </Card.Text>
+      <Card.Text>
         {e.bio}
       </Card.Text>
       <Button variant="primary" onClick={()=>{

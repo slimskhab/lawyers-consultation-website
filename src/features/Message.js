@@ -6,7 +6,7 @@ const initState={
   chats:[],
   selectedChat:{id:0},
   contracts:[],
-  thisContract:{},
+  thisContract:-1,
 }
 const messageSlice=createSlice({
     name:"authentification",

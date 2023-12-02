@@ -13,13 +13,16 @@ import { io } from 'socket.io-client';
 import animationData from "../../../animations/typing.json";
 import ScrollableFeed from 'react-scrollable-feed';
 import DatePicker from "react-datepicker";
+import { FaStar } from "react-icons/fa";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Select, useDisclosure, useToast } from '@chakra-ui/react';
 import { useNavigate } from "react-router-dom"
 const ENDPOINT = "http://localhost:6005"
 var socket;
+
 function Message(props) {
+    const commentRef = useRef();
     const user = useSelector((state) => state.authentificateStore.user)
     const chats = useSelector((state) => state.messageStore.chats)
     const selectedChat = useSelector((state) => state.messageStore.selectedChat)
@@ -38,7 +41,6 @@ function Message(props) {
     const [otherUser, setOtherUser] = useState();
     const toast = useToast();
     const [isTyping, setIsTyping] = useState(false);
-    const [messageContent, setMessageContent] = useState("");
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [nextDate, setNextDate] = useState(new Date());
@@ -131,7 +133,21 @@ function Message(props) {
 
         fetchData();
     }, [user.id, dispatch]);
+    const [currentValue, setCurrentValue] = useState(0);
+    const [hoverValue, setHoverValue] = useState(undefined);
+    const stars = Array(5).fill(0)
 
+    const handleClick = value => {
+        setCurrentValue(value)
+    }
+
+    const handleMouseOver = newHoverValue => {
+        setHoverValue(newHoverValue)
+    };
+
+    const handleMouseLeave = () => {
+        setHoverValue(undefined)
+    }
     const handleContract = () => {
         var messageData = {
             isContract: true,
@@ -150,9 +166,9 @@ function Message(props) {
     }
 
     const handleContractFinish = () => {
-        var requestData={
-            messageId:contract.id,
-            contractStatus:3
+        var requestData = {
+            messageId: contract.id,
+            contractStatus: 3
         }
         axios.post("http://localhost:6005/message/update", requestData).then((response) => {
             dispatch(removeMessage(contract.id))
@@ -229,12 +245,12 @@ function Message(props) {
                                             {
                                                 isLawyer && <div className='d-flex'>
                                                     {
-                                                        contracts.length >= 1 && <Button colorScheme='green' onClick={()=>{
+                                                        contracts.length >= 1 && <Button colorScheme='green' onClick={() => {
                                                             axios.get(`http://localhost:6005/message/contract/${selectedChat.id}`).then((res) => {
-                                        dispatch(initContracts(res.data.contracts));
-                                        onOpen()
+                                                                dispatch(initContracts(res.data.contracts));
+                                                                onOpen()
 
-                                    })
+                                                            })
                                                         }} style={{ marginRight: 10 }}>
                                                             Finish contract
                                                         </Button>
@@ -346,7 +362,7 @@ function Message(props) {
                                                                         <div className='d-flex' style={{ justifyContent: "space-between", }}>
 
                                                                             <div>
-                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
                                                                                     <span style={{ textAlign: "start" }}>Contract Id: #{e.id}</span>
                                                                                 </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
@@ -410,13 +426,13 @@ function Message(props) {
                                                                     </div>
 
                                                                 </div>);
-                                                            }else if(e.contractStatus===3){
+                                                            } else if (e.contractStatus === 3) {
                                                                 return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", flexDirection: "column", alignItems: "end", justifyContent: "end" }}>
-                                                                    <div className='contract-block' style={{border:"2px red solid"}}>
+                                                                    <div className='contract-block' style={{ border: "2px red solid" }}>
                                                                         <div className='d-flex' style={{ justifyContent: "space-between", }}>
 
                                                                             <div>
-                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
                                                                                     <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
 
                                                                                 </div>
@@ -443,13 +459,13 @@ function Message(props) {
                                                                     </div>
 
                                                                 </div>);
-                                                            }else if(e.contractStatus===4){
+                                                            } else if (e.contractStatus === 4) {
                                                                 return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", flexDirection: "column", alignItems: "end", justifyContent: "end" }}>
-                                                                    <div className='contract-block' style={{border:"2px red solid"}}>
+                                                                    <div className='contract-block' style={{ border: "2px red solid" }}>
                                                                         <div className='d-flex' style={{ justifyContent: "space-between", }}>
 
                                                                             <div>
-                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
                                                                                     <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
 
                                                                                 </div>
@@ -476,7 +492,8 @@ function Message(props) {
                                                                     </div>
 
                                                                 </div>);
-                                                            }                                                        }
+                                                            }
+                                                        }
                                                         else {
                                                             return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", justifyContent: "end" }}>
                                                                 <div className='sent-message'>
@@ -493,7 +510,7 @@ function Message(props) {
                                                                         <div className='d-flex' style={{ justifyContent: "space-between", paddingTop: "10px" }}>
 
                                                                             <div>
-                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
                                                                                     <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
                                                                                 </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
@@ -501,7 +518,7 @@ function Message(props) {
                                                                                 </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
                                                                                     <span style={{ textAlign: "start" }}>Start date: {formatDate(e.contractStartDate)}</span>
-                                                                                
+
 
                                                                                 </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
@@ -520,42 +537,35 @@ function Message(props) {
                                                                         <div style={{ display: "flex", justifyContent: "end" }}>
                                                                             <Button colorScheme='teal' variant='outline' onClick={() => {
                                                                                 var fullName = `${user.firstName} ${user.lastName}`;
-                                                                                console.log(fullName);
                                                                                 if (signatureRef.current.value === fullName) {
-                                                                                    axios.get(`http://localhost:6005/client/find/${user.id}`).then((res)=>{
-                                                                                        if (res.data.client.funds>=e.contractFee){
-                                                                                            axios.put("http://localhost:6005/client/update",{
-                                                                                                userId:user.id,
-                                                                                                funds:res.data.client.funds-e.contractFee
-                                                                                            }).then((res)=>{
-                                                                                                toast({
-                                                                                                    title: "removed funds!",
-                                                                                                    status: "success",
-                                                                                                    duration: 5000,
-                                                                                                    isClosable: true,
-                                                                                                    position: "bottom",
-                                                                                                });
+                                                                                    axios.get(`http://localhost:6005/client/find/${user.id}`).then((res) => {
+                                                                                        if (res.data.client.funds >= e.contractFee) {
+                                                                                            axios.put("http://localhost:6005/client/update", {
+                                                                                                userId: user.id,
+                                                                                                funds: res.data.client.funds - e.contractFee
+                                                                                            }).then((res) => {
+
                                                                                                 axios.post("http://localhost:6005/message/update", {
-                                                                                                messageId: e.id,
-                                                                                                contractStatus: 2
-                                                                                            }).then((response) => {
-                                                                                                socket.emit("new message", { ...response.data.message, senderId: user.id });
-                                                                                                dispatch(removeMessage(e.id))
-        
-                                                                                                dispatch(sendMessage(response.data.message))
-                                                                                                toast({
-                                                                                                    title: "Accepted contract!",
-                                                                                                    status: "success",
-                                                                                                    duration: 5000,
-                                                                                                    isClosable: true,
-                                                                                                    position: "bottom",
-                                                                                                });
-                                                                                            }).catch((e) => {
-                                                                                                console.log(e);
+                                                                                                    messageId: e.id,
+                                                                                                    contractStatus: 2
+                                                                                                }).then((response) => {
+                                                                                                    socket.emit("new message", { ...response.data.message, senderId: user.id });
+                                                                                                    dispatch(removeMessage(e.id))
+
+                                                                                                    dispatch(sendMessage(response.data.message))
+                                                                                                    toast({
+                                                                                                        title: "Accepted contract!",
+                                                                                                        status: "success",
+                                                                                                        duration: 5000,
+                                                                                                        isClosable: true,
+                                                                                                        position: "bottom",
+                                                                                                    });
+                                                                                                }).catch((e) => {
+                                                                                                    console.log(e);
+                                                                                                })
                                                                                             })
-                                                                                            })
-                                                                                            
-                                                                                        }else{
+
+                                                                                        } else {
                                                                                             toast({
                                                                                                 title: "Not enough funds!",
                                                                                                 status: "error",
@@ -565,7 +575,7 @@ function Message(props) {
                                                                                             });
                                                                                         }
                                                                                     })
-                                                                                    
+
                                                                                 } else {
                                                                                     toast({
                                                                                         title: "Wrong signature!",
@@ -593,7 +603,7 @@ function Message(props) {
                                                                         <div className='d-flex' style={{ justifyContent: "space-between", paddingTop: "10px" }}>
 
                                                                             <div>
-                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
                                                                                     <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
 
                                                                                 </div>
@@ -622,13 +632,13 @@ function Message(props) {
                                                                     </div>
 
                                                                 </div>);
-                                                            }else if(e.contractStatus===3){
+                                                            } else if (e.contractStatus === 3) {
                                                                 return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", flexDirection: "column", alignItems: "start", justifyContent: "end" }}>
-                                                                <div className='contract-block' style={{border:"2px red solid"}}>
-                                                                    <div className='d-flex' style={{ justifyContent: "space-between", paddingTop: "10px" }}>
+                                                                    <div className='contract-block' style={{ border: "2px red solid" }}>
+                                                                        <div className='d-flex' style={{ justifyContent: "space-between", paddingTop: "10px", width: "100%" }}>
 
-                                                                    <div>
-                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                            <div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
                                                                                     <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
 
                                                                                 </div>
@@ -644,60 +654,102 @@ function Message(props) {
                                                                                     <span style={{ textAlign: "start" }}>End Date: {formatDate(e.contractEndDate)}</span>
                                                                                 </div>
                                                                             </div>
+                                                                            <div>
+                                                                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Review:</span>
+                                                                                    <div style={{ display: "flex", flexDirection: "row", marginLeft: 10 }}>
+                                                                                        {stars.map((_, index) => {
+                                                                                            return (
+                                                                                                <FaStar
+                                                                                                    key={index}
+                                                                                                    size={18}
+                                                                                                    onClick={() => handleClick(index + 1)}
+                                                                                                    onMouseOver={() => handleMouseOver(index + 1)}
+                                                                                                    onMouseLeave={handleMouseLeave}
+                                                                                                    color={(hoverValue || currentValue) > index ? "#FFBA5A" : "#a9a9a9"}
+                                                                                                    style={{
+                                                                                                        marginRight: 5,
+                                                                                                        cursor: "pointer"
+                                                                                                    }}
+                                                                                                />
+                                                                                            )
+                                                                                        })}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Comment:</span>
+                                                                                    <div className='comment-box'>
+                                                                                        <textarea className='input-style' placeholder='' rows='5' style={{ resize: "none", fontSize: 18, borderRadius: 20 }} ref={commentRef}></textarea >
 
-                                                                    </div>
-                                                                    <div style={{ display: "flex", justifyContent: "end" }}>
-                                                                        <Button colorScheme='red' variant='outline' onClick={() => {
-                                                                            axios.post("http://localhost:6005/message/update", {
-                                                                                messageId: e.id,
-                                                                                contractStatus: 4
-                                                                            }).then((response) => {
-                                                                                socket.emit("new message", { ...response.data.message, senderId: user.id });
-                                                                                dispatch(removeMessage(e.id))
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
 
-                                                                                dispatch(sendMessage(response.data.message))
-                                                                                console.log("sending fund to user : "+otherUserId);
-                                                                                console.log("sending this funds : "+response.data.message.contractFee);
-                                                                                axios.put(`http://localhost:6005/lawyer/funds/${otherUserId}`,{
-                                                                                    funds:response.data.message.contractFee
-                                                                                }).then((res)=>{
-                                                                                    toast({
-                                                                                        title: "Finished contract!",
-                                                                                        status: "success",
-                                                                                        duration: 5000,
-                                                                                        isClosable: true,
-                                                                                        position: "bottom",
-                                                                                    });
-                                                                                }).catch((e)=>{
-                                                                                    toast({
-                                                                                        title: "Server error!",
-                                                                                        status: "error",
-                                                                                        duration: 5000,
-                                                                                        isClosable: true,
-                                                                                        position: "bottom",
-                                                                                    });
+                                                                        </div>
+                                                                        <br></br>
+                                                                        <div style={{ display: "flex", justifyContent: "end" }}>
+                                                                            <Button colorScheme='red' variant='outline' onClick={() => {
+                                                                                axios.post("http://localhost:6005/message/update", {
+                                                                                    messageId: e.id,
+                                                                                    contractStatus: 4
+                                                                                }).then((response) => {
+                                                                                    socket.emit("new message", { ...response.data.message, senderId: user.id });
+                                                                                    dispatch(removeMessage(e.id))
+                                                                                    dispatch(sendMessage(response.data.message))
+                                                                                    axios.post(`http://localhost:6005/review/add`, {
+                                                                                            lawyerId: otherUserId,
+                                                                                            clientId: user.id,
+                                                                                            comment: commentRef.current.value,
+                                                                                            stars: currentValue
+                                                                                        }).then((res) => {
+                                                                                            toast({
+                                                                                                title: "Added review!",
+                                                                                                status: "success",
+                                                                                                duration: 5000,
+                                                                                                isClosable: true,
+                                                                                                position: "bottom",
+                                                                                            });
+                                                                                        })
+                                                                                    axios.put(`http://localhost:6005/lawyer/funds/${otherUserId}`, {
+                                                                                        funds: response.data.message.contractFee
+                                                                                    }).then((res) => {
+                                                                                        toast({
+                                                                                            title: "Finished contract!",
+                                                                                            status: "success",
+                                                                                            duration: 5000,
+                                                                                            isClosable: true,
+                                                                                            position: "bottom",
+                                                                                        });
+                                                                                    }).catch((e) => {
+                                                                                        toast({
+                                                                                            title: "Server error!",
+                                                                                            status: "error",
+                                                                                            duration: 5000,
+                                                                                            isClosable: true,
+                                                                                            position: "bottom",
+                                                                                        });
+                                                                                    })
+
+                                                                                }).catch((e) => {
+                                                                                    console.log(e);
                                                                                 })
+                                                                            }}>
+                                                                                Finish Contract
+                                                                            </Button>
+                                                                        </div>
 
-                                                                            }).catch((e) => {
-                                                                                console.log(e);
-                                                                            })
-                                                                        }}>
-                                                                            Finish Contract
-                                                                        </Button>
+
+
                                                                     </div>
 
-
-
-                                                                </div>
-
-                                                            </div>);
-                                                            }else if(e.contractStatus===4){
+                                                                </div>);
+                                                            } else if (e.contractStatus === 4) {
                                                                 return (<div style={{ width: "100%", paddingBottom: 10, display: "flex", flexDirection: "column", alignItems: "end", justifyContent: "end" }}>
-                                                                    <div className='contract-block' style={{border:"2px red solid"}}>
+                                                                    <div className='contract-block' style={{ border: "2px red solid" }}>
                                                                         <div className='d-flex' style={{ justifyContent: "space-between", }}>
 
                                                                             <div>
-                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
                                                                                     <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
 
                                                                                 </div>
@@ -772,7 +824,6 @@ function Message(props) {
 
                                             <div className='input-container'>
                                                 <textarea className='input-style' placeholder='' ref={inputRef} onChange={(e) => {
-                                                    setMessageContent(e.target.value)
 
                                                     if (!typing) {
                                                         setTyping(true);
@@ -848,7 +899,7 @@ function Message(props) {
                                 dispatch(initThisContract(thisContract))
                             }}>
                                 {
-                                    contracts.map((e, index) => {
+                                    contracts.map((e,) => {
                                         return <option value={e.id}>Contract ID:{e.id}</option>
                                     })
                                 }
@@ -856,7 +907,7 @@ function Message(props) {
 
                             </Select>
                             {
-                                contract!==-1 && <div>
+                                contract !== -1 && <div>
                                     <h3>Contract ID:{contract.id} </h3>
                                     <h3>Contract Start Date: {formatDate(contract.contractStartDate)}</h3>
                                     <h3>Contract End Date: {formatDate(contract.contractEndDate)}</h3>
