@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Footer from "../../components/footer/Footer"
 import SmallNavBar from '../../components/smallnavigationbar/SmallNavBar';
 import "./Profile.css"
@@ -12,28 +12,56 @@ import RatingStars from '../../components/RatingStars';
 import { selectChat } from '../../../features/Message';
 import { Heading, Stack, Text } from '@chakra-ui/layout';
 import { Card, CardBody } from '@chakra-ui/card';
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, useDisclosure, useToast } from '@chakra-ui/react';
 function Profile() {
 
     const params = useParams();
     const [user, setUser] = useState("");
     const myId = useSelector((state) => state.authentificateStore.user.id);
     const isLawyer = useSelector((state) => state.authentificateStore.isLawyer);
+    const isLoggedIn = useSelector((state) => state.authentificateStore.isLoggedIn);
+    const { isOpen, onOpen, onClose } = useDisclosure()
+const toast=            useToast();
     const [rating, setRating] = useState(0)
     const [reviews, setReviews] = useState([])
-
     const navigate = useNavigate();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const reportContentRef=useRef();
+    const handleReport=()=>{
+        axios.post(`${process.env.REACT_APP_HOSTURL}/report/add`,{
+            reportedId:params.id,
+            reporterId:myId,
+            reportContent:reportContentRef.current.value
+        }).then((res)=>{
+            toast({
+                title: "Sent report",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom",
+              });
+        }).catch((e)=>{
+            toast({
+                title: "Server Error Search!",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom",
+              });
+        })
+    }
     useEffect(() => {
-        axios.get(`http://localhost:6005/lawyer/${params.id}`).then((response) => {
+
+        axios.get(`${process.env.REACT_APP_HOSTURL}/lawyer/${params.id}`).then((response) => {
             setUser(response.data.lawyer);
-            axios.get(`http://localhost:6005/review/avg/${params.id}`).then((res) => {
+            axios.get(`${process.env.REACT_APP_HOSTURL}/review/avg/${params.id}`).then((res) => {
                 const roundedRating = Math.round(res.data.averageStars);
 
                 setRating(roundedRating);
 
             })
 
-            axios.get(`http://localhost:6005/review/${params.id}`).then((res) => {
+            axios.get(`${process.env.REACT_APP_HOSTURL}/review/${params.id}`).then((res) => {
                 setReviews(res.data.reviews);
             })
         }).catch((e) => {
@@ -73,7 +101,7 @@ function Profile() {
                         </div>
                         {
                             !isLawyer && (<div className='claim-profile-button' onClick={() => {
-                                axios.post("http://localhost:6005/chat", {
+                                axios.post(`${process.env.REACT_APP_HOSTURL}/chat`, {
                                     lawyerId: params.id,
                                     clientId: myId
                                 }).then((response) => {
@@ -108,8 +136,12 @@ function Profile() {
 
 
                 </div>
+{
+isLoggedIn&&                <div className='donate-button' onClick={()=>{
+    onOpen();
+}}>Report Lawyer</div>
 
-                <div className='donate-button'>Report Lawyer</div>
+}
 
             </div>
 
@@ -145,7 +177,41 @@ function Profile() {
             </div>
 
 
+            <AlertDialog
+                isOpen={isOpen}
+                //leastDestructiveRef={cancelRef}
+                onClose={onClose}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                            Report Lawyer
+                        </AlertDialogHeader>
 
+                        <AlertDialogBody>
+Report content:
+                        <textarea className='input-style' placeholder='' rows='5' style={{ resize: "none" }} ref={reportContentRef}></textarea >
+
+
+                            
+                        </AlertDialogBody>
+
+                        <AlertDialogFooter>
+                            <Button
+                                //ref={cancelRef}
+                                onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button colorScheme='red' ml={3} onClick={()=>{
+                                handleReport();
+                                onClose();
+                            }}>
+                                Report
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
             <Footer />
         </div>
     );

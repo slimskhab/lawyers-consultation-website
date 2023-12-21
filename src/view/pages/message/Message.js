@@ -18,7 +18,7 @@ import { FaStar } from "react-icons/fa";
 import "react-datepicker/dist/react-datepicker.css";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Select, useDisclosure, useToast } from '@chakra-ui/react';
 import { useNavigate } from "react-router-dom"
-const ENDPOINT = "http://localhost:6005"
+const ENDPOINT = process.env.REACT_APP_HOSTURL
 var socket;
 
 function Message(props) {
@@ -103,7 +103,7 @@ function Message(props) {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const response = await axios.post("http://localhost:6005/chat/all", {
+                const response = await axios.post(`${process.env.REACT_APP_HOSTURL}/chat/all`, {
                     userId: user.id
                 });
                 const chatsArray = response.data.chats;
@@ -112,11 +112,11 @@ function Message(props) {
                     var fullName;
                     if (isLawyer) {
                         const clientId = chatsArray[index].users.find(userId => userId !== user.id);
-                        const clientResponse = await axios.get(`http://localhost:6005/client/find/${clientId}`);
+                        const clientResponse = await axios.get(`${process.env.REACT_APP_HOSTURL}/client/find/${clientId}`);
                         fullName = `${clientResponse.data.client.firstName} ${clientResponse.data.client.lastName}`;
                     } else {
                         const lawyerId = chatsArray[index].users.find(userId => userId !== user.id);
-                        const clientResponse = await axios.get(`http://localhost:6005/lawyer/find/${lawyerId}`);
+                        const clientResponse = await axios.get(`${process.env.REACT_APP_HOSTURL}/lawyer/find/${lawyerId}`);
                         fullName = `${clientResponse.data.lawyer.firstName} ${clientResponse.data.lawyer.lastName}`;
                     }
 
@@ -156,7 +156,7 @@ function Message(props) {
             content: "Sent a contract",
             chatId: selectedChat.id
         }
-        axios.post("http://localhost:6005/message/send", messageData).then((response) => {
+        axios.post(`${process.env.REACT_APP_HOSTURL}/message/send`, messageData).then((response) => {
             socket.emit("new message", response.data.message)
             dispatch(sendMessage(response.data.message));
             onClose();
@@ -170,7 +170,7 @@ function Message(props) {
             messageId: contract.id,
             contractStatus: 3
         }
-        axios.post("http://localhost:6005/message/update", requestData).then((response) => {
+        axios.post(`${process.env.REACT_APP_HOSTURL}/message/update`, requestData).then((response) => {
             dispatch(removeMessage(contract.id))
             socket.emit("new message", response.data.message)
             dispatch(sendMessage(response.data.message));
@@ -201,7 +201,7 @@ function Message(props) {
                                     setOtherUserId(id);
 
                                     if (!isLawyer) {
-                                        axios.get(`http://localhost:6005/lawyer/${id}`).then((res) => {
+                                        axios.get(`${process.env.REACT_APP_HOSTURL}/lawyer/${id}`).then((res) => {
                                             setOtherUser(res.data.lawyer);
 
                                         }).catch((e) => {
@@ -210,12 +210,12 @@ function Message(props) {
                                     }
                                     dispatch(selectChat(e));
 
-                                    axios.get(`http://localhost:6005/message/contract/${selectedChat.id}`).then((res) => {
+                                    axios.get(`${process.env.REACT_APP_HOSTURL}/message/contract/${selectedChat.id}`).then((res) => {
                                         dispatch(initContracts(res.data.contracts))
                                     })
                                     setIsLoading(true);
 
-                                    axios.get(`http://localhost:6005/message/${e.id}`).then((response) => {
+                                    axios.get(`${process.env.REACT_APP_HOSTURL}/message/${e.id}`).then((response) => {
                                         socket.emit("join chat", selectedChat.id)
 
                                         dispatch(initializeMessages(response.data))
@@ -246,7 +246,7 @@ function Message(props) {
                                                 isLawyer && <div className='d-flex'>
                                                     {
                                                         contracts.length >= 1 && <Button colorScheme='green' onClick={() => {
-                                                            axios.get(`http://localhost:6005/message/contract/${selectedChat.id}`).then((res) => {
+                                                            axios.get(`${process.env.REACT_APP_HOSTURL}/message/contract/${selectedChat.id}`).then((res) => {
                                                                 dispatch(initContracts(res.data.contracts));
                                                                 onOpen()
 
@@ -320,7 +320,7 @@ function Message(props) {
                                                                                         contractFee: feeRef.current.value
                                                                                     }
 
-                                                                                    axios.post("http://localhost:6005/message/update", requestData).then((response) => {
+                                                                                    axios.post(`${process.env.REACT_APP_HOSTURL}/message/update`, requestData).then((response) => {
                                                                                         dispatch(removeMessage(e.id))
                                                                                         socket.emit("new message", response.data.message)
                                                                                         dispatch(sendMessage(response.data.message));
@@ -397,20 +397,21 @@ function Message(props) {
                                                                         <div className='d-flex' style={{ justifyContent: "space-between", }}>
 
                                                                             <div>
-                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>Fee</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractFee}</span>
+                                                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>Contract ID: #{e.id}</span>
 
                                                                                 </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>Start date</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractStartDate}</span>
-
+                                                                                    <span style={{ textAlign: "start" }}>Fee: {e.contractFee} TND</span>
 
                                                                                 </div>
                                                                                 <div style={{ display: "flex", flexDirection: "column" }}>
-                                                                                    <span style={{ textAlign: "start" }}>End Date</span>
-                                                                                    <span style={{ textAlign: "start" }}>{e.contractEndDate}</span>
+                                                                                    <span style={{ textAlign: "start" }}>Start date: {formatDate(e.contractStartDate)}</span>
+ 
+
+                                                                                </div>
+                                                                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                                                                    <span style={{ textAlign: "start" }}>End Date: {formatDate(e.contractEndDate)}</span>
 
                                                                                 </div>
                                                                             </div>
@@ -538,14 +539,14 @@ function Message(props) {
                                                                             <Button colorScheme='teal' variant='outline' onClick={() => {
                                                                                 var fullName = `${user.firstName} ${user.lastName}`;
                                                                                 if (signatureRef.current.value === fullName) {
-                                                                                    axios.get(`http://localhost:6005/client/find/${user.id}`).then((res) => {
+                                                                                    axios.get(`${process.env.REACT_APP_HOSTURL}/client/find/${user.id}`).then((res) => {
                                                                                         if (res.data.client.funds >= e.contractFee) {
-                                                                                            axios.put("http://localhost:6005/client/update", {
+                                                                                            axios.put(`${process.env.REACT_APP_HOSTURL}/client/update`, {
                                                                                                 userId: user.id,
                                                                                                 funds: res.data.client.funds - e.contractFee
                                                                                             }).then((res) => {
 
-                                                                                                axios.post("http://localhost:6005/message/update", {
+                                                                                                axios.post(`${process.env.REACT_APP_HOSTURL}/message/update`, {
                                                                                                     messageId: e.id,
                                                                                                     contractStatus: 2
                                                                                                 }).then((response) => {
@@ -689,14 +690,14 @@ function Message(props) {
                                                                         <br></br>
                                                                         <div style={{ display: "flex", justifyContent: "end" }}>
                                                                             <Button colorScheme='red' variant='outline' onClick={() => {
-                                                                                axios.post("http://localhost:6005/message/update", {
+                                                                                axios.post(`${process.env.REACT_APP_HOSTURL}/message/update`, {
                                                                                     messageId: e.id,
                                                                                     contractStatus: 4
                                                                                 }).then((response) => {
                                                                                     socket.emit("new message", { ...response.data.message, senderId: user.id });
                                                                                     dispatch(removeMessage(e.id))
                                                                                     dispatch(sendMessage(response.data.message))
-                                                                                    axios.post(`http://localhost:6005/review/add`, {
+                                                                                    axios.post(`${process.env.REACT_APP_HOSTURL}/review/add`, {
                                                                                             lawyerId: otherUserId,
                                                                                             clientId: user.id,
                                                                                             comment: commentRef.current.value,
@@ -710,7 +711,7 @@ function Message(props) {
                                                                                                 position: "bottom",
                                                                                             });
                                                                                         })
-                                                                                    axios.put(`http://localhost:6005/lawyer/funds/${otherUserId}`, {
+                                                                                    axios.put(`${process.env.REACT_APP_HOSTURL}/lawyer/funds/${otherUserId}`, {
                                                                                         funds: response.data.message.contractFee
                                                                                     }).then((res) => {
                                                                                         toast({
@@ -845,7 +846,7 @@ function Message(props) {
                                                         e.preventDefault();
                                                         socket.emit("stop typing", otherUserId)
                                                         var messageContent = inputRef.current.value;
-                                                        axios.post("http://localhost:6005/message/send", {
+                                                        axios.post(`${process.env.REACT_APP_HOSTURL}/message/send`, {
                                                             senderId: user.id,
                                                             chatId: selectedChat.id,
                                                             content: messageContent
@@ -860,7 +861,7 @@ function Message(props) {
                                                 }}></textarea>                                    </div>
                                             <div className='sending-button' onClick={() => {
                                                 var messageContent = inputRef.current.value;
-                                                axios.post("http://localhost:6005/message/send", {
+                                                axios.post(`${process.env.REACT_APP_HOSTURL}/message/send`, {
                                                     senderId: user.id,
                                                     chatId: selectedChat.id,
                                                     content: messageContent

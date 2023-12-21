@@ -12,7 +12,7 @@ function SearchBar(props) {
     const [searchText, setSearchText] = useState("");
 const toast=useToast()
 useEffect(()=>{
-axios.get("http://localhost:6005/lawyer").then((res)=>{
+axios.get(`${process.env.REACT_APP_HOSTURL}/lawyer`).then((res)=>{
     dispatch(setList(res.data.lawyers))
 }).catch((e)=>{
     toast({

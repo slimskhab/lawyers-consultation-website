@@ -26,7 +26,7 @@ function MostRated(props) {
     }, [deviceWidth]);
 
     useEffect(()=>{
-        axios.post("http://localhost:6005/lawyer/top").then((response)=>{
+        axios.post(`${process.env.REACT_APP_HOSTURL}/lawyer/top`).then((response)=>{
             setLawyers(response.data.topLawyers)
         }).catch((e)=>{
             toast({

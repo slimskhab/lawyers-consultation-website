@@ -52,7 +52,7 @@ const methods=useSelector((state)=>state.methodsStore.paymentMethods);
     }, [isLoggedIn]);
 
     useEffect(() => {
-        axios.get(`http://localhost:6005/paymentmethod/${thisUser.id}`).then((res)=>{
+        axios.get(`${process.env.REACT_APP_HOSTURL}/paymentmethod/${thisUser.id}`).then((res)=>{
             dispatch(initPayementMethods(res.data.methods))
         }).catch((e)=>{
             toast({
@@ -67,11 +67,11 @@ const methods=useSelector((state)=>state.methodsStore.paymentMethods);
 
     useEffect(()=>{
         if(isLawyer){
-            axios.get(`http://localhost:6005/lawyer/${thisUser.id}`).then((res)=>{
+            axios.get(`${process.env.REACT_APP_HOSTURL}/lawyer/${thisUser.id}`).then((res)=>{
                 dispatch(authentificateLawyer(res.data.lawyer))
             })
         }else{
-            axios.get(`http://localhost:6005/client/find/${thisUser.id}`).then((res)=>{
+            axios.get(`${process.env.REACT_APP_HOSTURL}/client/find/${thisUser.id}`).then((res)=>{
                 dispatch(authentificateClient(res.data.client))
             })
         }
@@ -118,7 +118,7 @@ const methods=useSelector((state)=>state.methodsStore.paymentMethods);
                 position: "bottom",
               });
         }else{
-            axios.put("http://localhost:6005/lawyer/withdraw",{
+            axios.put(`${process.env.REACT_APP_HOSTURL}/lawyer/withdraw`,{
                 userId:thisUser.id,
                 funds:thisUser.funds-funds
             }).then((res)=>{
@@ -171,7 +171,7 @@ const methods=useSelector((state)=>state.methodsStore.paymentMethods);
     }
 
     const handleAddCard=()=>{
-        axios.post("http://localhost:6005/paymentmethod/add",{
+        axios.post(`${process.env.REACT_APP_HOSTURL}/paymentmethod/add`,{
                 userId:thisUser.id,
                 ccv2:ccv2,
                 creditCardNumber:cardNumber,
@@ -437,7 +437,7 @@ const methods=useSelector((state)=>state.methodsStore.paymentMethods);
                                         <div>
                                         {
                                             isLawyer?<Button colorScheme='green' style={{marginRight:10}} onClick={onOpen}>Withdraw Money</Button>:<Button colorScheme='green' style={{marginRight:10}} onClick={()=>{
-                                                axios.put(`http://localhost:6005/client/funds/${thisUser.id}`,{
+                                                axios.put(`${process.env.REACT_APP_HOSTURL}/client/funds/${thisUser.id}`,{
                                                     funds:200
                                                 }).then((res)=>{
                                                     dispatch(updateFunds(200))
@@ -452,7 +452,7 @@ const methods=useSelector((state)=>state.methodsStore.paymentMethods);
                                             }}>Add Funds</Button>
                                         }
                                         <Button colorScheme='red' onClick={()=>{
-                                            axios.delete(`http://localhost:6005/paymentmethod/delete/${e.id}`).then((res)=>{
+                                            axios.delete(`${process.env.REACT_APP_HOSTURL}/paymentmethod/delete/${e.id}`).then((res)=>{
                                                 toast({
                                                     title: "Deleted Payment Method!",
                                                     status: "success",

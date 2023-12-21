@@ -29,7 +29,7 @@ function Login(props) {
                 navigate("/admin-panel")
                 return;
             }
-            axios.post("http://localhost:6005/lawyer/login", {
+            axios.post(`${process.env.REACT_APP_HOSTURL}/lawyer/login`, {
                 "email": emailRef.current.value,
                 "password": passwordRef.current.value
             }).then((response) => {
@@ -52,7 +52,7 @@ function Login(props) {
                 console.log(e);
             })
         } else {
-            axios.post("http://localhost:6005/client/login", {
+            axios.post(`${process.env.REACT_APP_HOSTURL}/client/login`, {
                 "email": emailRef.current.value,
                 "password": passwordRef.current.value
             }).then((response) => {

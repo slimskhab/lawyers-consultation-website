@@ -108,7 +108,7 @@ function Signup(props) {
                     category: value,
                     certifPic:certif
                 }
-                axios.post("http://localhost:6005/lawyer/signup", requestData).then((response) => {
+                axios.post(`${process.env.REACT_APP_HOSTURL}/lawyer/signup`, requestData).then((response) => {
                     //dispatch(authentificateLawyer(response.data.lawyer))
 
                     navigate('/');
@@ -153,7 +153,7 @@ function Signup(props) {
                     password: passwordRef.current.value,
                     email: emailRef.current.value,
                 }
-                axios.post("http://localhost:6005/client", requestData).then((response) => {
+                axios.post(`${process.env.REACT_APP_HOSTURL}/client`, requestData).then((response) => {
                     console.log(response.data);
                     dispatch(authentificateClient(response.data.client))
                     navigate('/');
